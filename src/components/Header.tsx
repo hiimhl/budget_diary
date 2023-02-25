@@ -2,7 +2,18 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.header`
-  height: 100px;
+  width: 650px;
+  margin: auto;
+  height: 10vh;
+  background-color: ${(props) => props.theme.cardColor};
+  box-shadow: ${(props) => props.theme.boxShadow};
+  font-family: ${(props) => props.theme.font.eng};
+
+  /* Tablet */
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+  }
+
   nav {
     border-bottom: 1px dashed green;
     display: flex;

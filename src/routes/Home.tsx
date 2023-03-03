@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import CreateAmount from "../components/CreateAmount";
 
@@ -59,8 +58,6 @@ const Week = styled.div`
 
 function Home() {
   // const [isAdd, setIsAdd] = useState(false);
-  // const [isEdit, setIsEdit] = useState(false);
-  // console.log(isEdit);
 
   // Go to Detail page
   const onCardDetail = () => {};

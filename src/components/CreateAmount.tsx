@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { ADD_BUDGET } from "../store";
 
 const Form = styled.form`
   li {
@@ -28,21 +30,24 @@ function CreateAmount() {
     reset,
     formState: { errors },
   } = useForm<IForm>();
-  const [amountData, setData] = useState({});
+  const dispatch = useDispatch();
 
   const onSubmit = (data: IForm) => {
-    setData({
-      date: data.date,
+    const date = data.date.slice(0, 10);
+    const time = data.date.slice(11);
+    const obj = {
+      time: time,
       title: data.title,
       amount: data.amount,
-      id: data.date,
+      id: date,
       category: data.category,
       pay: data.pay,
       memo: data.memo,
-    });
+    };
+    dispatch({ type: ADD_BUDGET, data: obj });
     reset();
-    console.log(amountData);
   };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <ul>

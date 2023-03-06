@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { ADD_BUDGET } from "../store";
+import { useDispatch, useSelector } from "react-redux";
+import { ADD_DIARY } from "../store";
 
 const Form = styled.form`
   li {
@@ -17,14 +17,12 @@ const Form = styled.form`
 // Interface
 interface IForm {
   date: string;
-  amount: string;
   title: string;
-  category: string;
-  pay: string;
   memo: string;
+  emoji: string;
 }
 
-function CreateAmount() {
+function CreateDiary() {
   const {
     register,
     handleSubmit,
@@ -38,6 +36,7 @@ function CreateAmount() {
     return Math.floor(Math.random() * 10);
   };
   const id = randomId();
+  const storeDiary = useSelector((state: any) => state.data.diary);
 
   // Send data to the Store
   const onSubmit = (data: IForm) => {
@@ -47,15 +46,13 @@ function CreateAmount() {
     const time = data.date.slice(11);
     const obj = {
       title: data.title,
-      amount: data.amount,
       date,
       time,
       id: fullDate + "-" + id,
-      category: data.category,
-      pay: data.pay,
+      emoji: data.emoji,
       memo: data.memo,
     };
-    dispatch({ type: ADD_BUDGET, data: obj });
+    dispatch({ type: ADD_DIARY, data: obj });
     reset();
   };
 
@@ -63,7 +60,7 @@ function CreateAmount() {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <ul>
         <li>
-          <label htmlFor="date">지출일 : </label>
+          <label htmlFor="date">날짜 : </label>
           <input
             {...register("date", { required: "날짜를 입력해주세요!" })}
             id="date"
@@ -72,7 +69,7 @@ function CreateAmount() {
           <p>{errors?.date?.message}</p>
         </li>
         <li>
-          <label htmlFor="title">내역 : </label>
+          <label htmlFor="title">메모 : </label>
           <input
             {...register("title", {
               required: "내역을 입력해주세요!",
@@ -87,35 +84,22 @@ function CreateAmount() {
           <p>{errors?.title?.message}</p>
         </li>
         <li>
-          <label htmlFor="amount">금액 : </label>
           <input
-            {...register("amount", {
-              required: "금액을 입력해주세요!",
-              minLength: {
-                value: 2,
-                message: "2글자 이상 입력해주세요.",
-              },
-            })}
-            type="number"
-            id="amount"
+            {...register("emoji")}
+            value="emoji_1"
+            id="emoji_1"
+            type="radio"
           />
-          <p>{errors?.amount?.message}</p>
+          <label htmlFor="emoji_1">image</label>
+          <input
+            {...register("emoji")}
+            value="emoji_2"
+            id="emoji_2"
+            type="radio"
+          />
+          <label htmlFor="emoji_2">image</label>
         </li>
-        <li>
-          <label htmlFor="category">카테고리 : </label>
-          <select {...register("category", { required: true })} id="category">
-            <option value="eat">식비</option>
-            <option value="health">건강유지비</option>
-            <option value="study">교육비</option>
-          </select>
-        </li>
-        <li>
-          <label htmlFor="pay">지불 수단 : </label>
-          <select {...register("pay", { required: true })} name="pay" id="pay">
-            <option value="credit">신용카드</option>
-            <option value="cash">현금</option>
-          </select>
-        </li>
+
         <li>
           <label htmlFor="memo">메모 : </label>
           <textarea {...register("memo")} id="memo" />
@@ -127,4 +111,4 @@ function CreateAmount() {
   );
 }
 
-export default CreateAmount;
+export default CreateDiary;

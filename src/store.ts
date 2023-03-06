@@ -1,13 +1,44 @@
 import { legacy_createStore as createStore } from "redux";
 
+// Interface
 export interface IState {
   data: {
-    budgetBook: {};
-    diary: {};
+    budgetBook: {
+      [key: string]: IBudget[];
+    };
+    diary: {
+      [key: string]: IDiary[];
+    };
   };
 }
 
-const initialState: IState = {
+interface IBudget {
+  time: string;
+  title: string;
+  date: string;
+  amount: string;
+  id: string;
+  category: string;
+  pay: string;
+  memo: string;
+}
+
+interface IDiary {
+  time: string;
+  title: string;
+  date: string;
+  id: string;
+  memo: string;
+  emoji: string;
+}
+
+interface IAction {
+  type: IType;
+  data: IBudget | IDiary;
+}
+
+// State
+export const initialState: IState = {
   data: {
     budgetBook: {},
     diary: {},
@@ -16,30 +47,46 @@ const initialState: IState = {
 
 // Type
 export const ADD_BUDGET = "ADD_BUDGET";
+export const ADD_DIARY = "ADD_DIARY";
+export const REMOVE_BUDGET = "REMOVE_BUDGET";
 
-// export function setState(data: any) {
-//   return { type: "ADD", data: data };
-// }
+type IType = "ADD_BUDGET" | "ADD_DIARY" | "REMOVE_BUDGET";
 
-interface IBudget {
-  time: string;
-  title: string;
-  amount: string;
-  id: string;
-  category: string;
-  pay: string;
-  memo: string;
-}
-
+// Reducer
 export function reducer(
   state: IState = initialState,
-  action: { type: string; data: IBudget }
+  action: { type: IType; data: any }
 ) {
   switch (action.type) {
     case ADD_BUDGET:
-      return { ...state, budgetBook: action.data };
-    case "REMOVE":
+      return {
+        data: {
+          budgetBook: {
+            ...state.data.budgetBook,
+            [action.data.date]: [
+              ...(state.data.budgetBook[action.data.date] ?? []),
+              action.data,
+            ],
+          },
+          diary: state.data.diary,
+        },
+      };
+    case REMOVE_BUDGET:
       return state;
+
+    case ADD_DIARY:
+      return {
+        data: {
+          diary: {
+            ...state.data.diary,
+            [action.data.date]: [
+              ...(state.data.diary[action.data.date] ?? []),
+              action.data,
+            ],
+          },
+          budgetBook: state.data.budgetBook,
+        },
+      };
     default:
       return state;
   }

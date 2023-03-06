@@ -5,9 +5,5 @@ export const lightTheme: DefaultTheme = {
   backgroundColor: "#f6f6f6",
   pointColor: "",
   cardColor: "#ffffff",
-  boxShadow: "rgba(100, 100, 111, 0.2) 0px 15px 29px 0px",
-  font: {
-    eng: "Tilt Warp",
-    kor: "IBM Plex Sans KR",
-  },
+  boxShadow: "rgba(100, 100, 111, 0.2) 0px 10px 29px 0px",
 };

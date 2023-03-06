@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { font } from "../style-root";
 
 const Wrapper = styled.header`
   width: 650px;
   margin: auto;
   height: 10vh;
   background-color: ${(props) => props.theme.cardColor};
-  box-shadow: ${(props) => props.theme.boxShadow};
-  font-family: ${(props) => props.theme.font.eng};
+  font-family: ${font.eng};
 
   /* Tablet */
   @media only screen and (max-width: 768px) {

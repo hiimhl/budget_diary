@@ -6,7 +6,6 @@ import Home from "./routes/Home";
 function Router() {
   return (
     <HashRouter>
-      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
       </Routes>

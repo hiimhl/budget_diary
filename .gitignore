@@ -23,3 +23,7 @@ yarn-error.log*
 
 dummyData.ts
 type.ts
+
+/src/util
+
+WeeklyCalendar.tsx

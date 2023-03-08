@@ -4,10 +4,12 @@ import styled from "styled-components";
 import CreateAmount from "../components/CreateAmount";
 import CreateDiary from "../components/CreateDiary";
 import Header from "../components/Header";
-import { borderRadius, font, fontSize, space } from "../style-root";
+import TodayCard from "../components/TodayCard";
+import { IBudget, IState } from "../store";
+import { borderRadius, font, fontSize, rainbow, space } from "../style-root";
 
 // Style
-const Wrapper = styled.div`
+export const Wrapper = styled.div`
   width: 650px;
   margin: 0 auto;
   height: 100vh;
@@ -34,7 +36,7 @@ const Card = styled.div`
   border-radius: ${borderRadius.large};
 `;
 
-const Week = styled.div`
+const Week = styled.div<{ userTheme: string }>`
   width: 85%;
   margin: 40px auto;
   padding: 20px;
@@ -58,45 +60,40 @@ const Week = styled.div`
       padding-bottom: ${space.large};
     }
   }
+  .${(props) => props.userTheme} {
+    .mon {
+    }
+  }
 `;
 
 function Home() {
-  // const [isAdd, setIsAdd] = useState(false);
+  const [add, setAdd] = useState(false);
 
   // Go to Detail page
   const onCardDetail = () => {};
-  const budgetData = useSelector((state: any) => state.budgetBook);
+  const budgetData = useSelector((state: IState) => state.data.budgetBook);
+  const DiaryData = useSelector((state: any) => state.diary);
 
-  const getDate = (newDate: any) => {
-    const year = newDate.getFullYear();
-    const month = String(newDate.getMonth() + 1).padStart(2, "0");
-    const day = String(newDate.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  const newDate = new Date();
+  const dayOfTheWeek = newDate.getDay();
+  const year = newDate.getFullYear();
+  const month = String(newDate.getMonth() + 1).padStart(2, "0");
+  const day = String(newDate.getDate()).padStart(2, "0");
+  const today = `${year}-${month}-${day}`;
 
-  const today = getDate(new Date());
-  console.log(today);
-  let todayData = {};
+  const theme = "rainbow";
+  // console.log(budgetData[getDate(new Date())]);
+  const todayBudget = budgetData[today];
 
   return (
     <Wrapper>
       <Header />
       {/* <CreateAmount /> */}
-      <CreateDiary />
+      {/* <CreateDiary /> */}
       <DetailCard>
-        <Card onClick={onCardDetail}>
-          {/* { budgetData.map((data:any)=>data.date===today ? <>
-          <h2>{data.title}</h2>
-          <div>{data.title}</div>
-          <div>
-          {data.title} <br />
-          {data.title}
-          </div>
-          <div>쪽지</div>
-        </>:<span>일정을 추가해주세요</span>)}
-           */}
-        </Card>
-        <Week>
+        <TodayCard today={today} day={dayOfTheWeek} />
+
+        <Week userTheme={theme}>
           <h2>Week</h2>
           <span>❤</span>
           <ul>

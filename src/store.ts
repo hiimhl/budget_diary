@@ -7,12 +7,12 @@ export interface IState {
       [key: string]: IBudget[];
     };
     diary: {
-      [key: string]: IDiary[];
+      [key: string]: IDiary;
     };
   };
 }
 
-interface IBudget {
+export interface IBudget {
   time: string;
   title: string;
   date: string;
@@ -40,7 +40,20 @@ interface IAction {
 // State
 export const initialState: IState = {
   data: {
-    budgetBook: {},
+    budgetBook: {
+      "2023-03-08": [
+        {
+          time: "12:30",
+          title: "편의점",
+          date: "2023-03-08",
+          amount: "1200",
+          id: "2023-03-02-12-30-5",
+          category: "식비",
+          pay: "신용카드",
+          memo: "과자 냠냠",
+        },
+      ],
+    },
     diary: {},
   },
 };
@@ -59,14 +72,12 @@ export function reducer(
 ) {
   switch (action.type) {
     case ADD_BUDGET:
+      const { date } = action.data;
       return {
         data: {
           budgetBook: {
             ...state.data.budgetBook,
-            [action.data.date]: [
-              ...(state.data.budgetBook[action.data.date] ?? []),
-              action.data,
-            ],
+            [date]: [...(state.data.budgetBook[date] ?? []), action.data],
           },
           diary: state.data.diary,
         },
@@ -79,14 +90,25 @@ export function reducer(
         data: {
           diary: {
             ...state.data.diary,
-            [action.data.date]: [
-              ...(state.data.diary[action.data.date] ?? []),
-              action.data,
-            ],
+            [date]: action.data,
           },
           budgetBook: state.data.budgetBook,
         },
       };
+    // case EDIT_DIARY: {
+    //   const { title, content, date } = action.data;
+
+    //   return {
+    //     ...state,
+    //     data: {
+    //       ...state.data,
+    //       [date]: {
+    //         diary: { title, content },
+    //         budgetBook: [...state.data[date].budgetBook],
+    //       },
+    //     },
+    //   };
+    // }
     default:
       return state;
   }

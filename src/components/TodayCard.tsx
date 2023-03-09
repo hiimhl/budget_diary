@@ -1,30 +1,37 @@
 import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { IBudget, IState } from "../store";
+import { IState } from "../store";
 import { useNavigate } from "react-router-dom";
-import { getWeek } from "../util/day";
+import { dayOfWeek, today } from "../util/day";
+import { borderRadius } from "../style-root";
 
-const Card = styled.div``;
+const Card = styled.div`
+  background-color: pink;
+  padding: 15px;
+  height: 250px;
+  width: 75%;
+  margin: auto;
+  border-radius: ${borderRadius.large};
+`;
 
-interface IProps {
-  today: string;
-  day: number;
-}
-
-function TodayCard({ today, day }: IProps) {
+function TodayCard() {
   const data = useSelector((state: IState) => state.data);
   const navigation = useNavigate();
 
   const todayBudget = data.budgetBook[today];
   const todayDiary = data.diary[today];
 
-  const totalAmount = todayBudget.reduce((prev: any, current: any) => {
-    return prev + current.amount;
-  }, 0);
+  // Set today's total amount
+  let totalAmount = 0;
+  if (todayBudget.length > 1) {
+    totalAmount = todayBudget.reduce((prev: any, current: any) => {
+      return prev + current.amount;
+    }, 0);
+  } else if ((todayBudget.length = 1)) {
+    totalAmount = todayBudget[0].amount;
+  }
 
-  const dayOfWeek = getWeek(day);
-  // console.log(todayTotal);
   // Go to Detail page
   const onToDetail = () => navigation("/Detail");
 
@@ -36,7 +43,7 @@ function TodayCard({ today, day }: IProps) {
       {todayBudget || todayDiary ? (
         <>
           <div>
-            <span>총 지출 : {totalAmount ? totalAmount.slice(1) : "0"}원</span>
+            <span>총 지출 : {totalAmount}원</span>
             {todayDiary ? (
               <>
                 <p>{todayDiary.title}</p>
@@ -50,7 +57,10 @@ function TodayCard({ today, day }: IProps) {
           <button onClick={onToDetail}>추가하기</button>
         </>
       ) : (
-        <span>일정을 추가해주세요</span>
+        <>
+          <span>일정을 추가해주세요</span>
+          <button onClick={onToDetail}>추가하기</button>
+        </>
       )}
     </Card>
   );

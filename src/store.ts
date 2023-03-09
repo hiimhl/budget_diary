@@ -16,7 +16,7 @@ export interface IBudget {
   time: string;
   title: string;
   date: string;
-  amount: string;
+  amount: number;
   id: string;
   category: string;
   pay: string;
@@ -41,12 +41,34 @@ interface IAction {
 export const initialState: IState = {
   data: {
     budgetBook: {
+      "2023-03-09": [
+        {
+          time: "12:30",
+          title: "편의점",
+          date: "2023-03-09",
+          amount: -1200,
+          id: "2023-03-02-12-30-5",
+          category: "식비",
+          pay: "신용카드",
+          memo: "과자 냠냠",
+        },
+        {
+          time: "12:30",
+          title: "편의점",
+          date: "2023-03-09",
+          amount: -1200,
+          id: "2023-03-02-12-30-5",
+          category: "식비",
+          pay: "신용카드",
+          memo: "과자 냠냠",
+        },
+      ],
       "2023-03-08": [
         {
           time: "12:30",
           title: "편의점",
-          date: "2023-03-08",
-          amount: "1200",
+          date: "2023-03-09",
+          amount: 1200,
           id: "2023-03-02-12-30-5",
           category: "식비",
           pay: "신용카드",

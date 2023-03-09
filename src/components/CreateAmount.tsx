@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { ADD_BUDGET } from "../store";
+import { today } from "../util/day";
 
 const Form = styled.form`
   li {
@@ -33,6 +34,8 @@ function CreateAmount() {
   } = useForm<IForm>();
   const dispatch = useDispatch();
 
+  const [isPositive, setIsPositive] = useState(false);
+
   // Create random id
   const randomId = () => {
     return Math.floor(Math.random() * 10);
@@ -45,9 +48,14 @@ function CreateAmount() {
     const dash = data.date.replace(":", "-");
     const fullDate = dash.replace("T", "-");
     const time = data.date.slice(11);
+
+    // Make amount Positive or Negative
+    const amountoNumber = parseInt(data.amount);
+    const amount = isPositive ? amountoNumber : -amountoNumber;
+
     const obj = {
       title: data.title,
-      amount: data.amount,
+      amount,
       date,
       time,
       id: fullDate + "-" + id,
@@ -59,15 +67,24 @@ function CreateAmount() {
     reset();
   };
 
+  const onIsPositive = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setIsPositive((prev: boolean) => !prev);
+    e.preventDefault();
+  };
+
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <ul>
+        <li>
+          <button onClick={onIsPositive}>{isPositive ? "수입" : "지출"}</button>
+        </li>
         <li>
           <label htmlFor="date">지출일 : </label>
           <input
             {...register("date", { required: "날짜를 입력해주세요!" })}
             id="date"
             type="datetime-local"
+            defaultValue={new Date().toISOString().slice(0, 16)}
           />
           <p>{errors?.date?.message}</p>
         </li>

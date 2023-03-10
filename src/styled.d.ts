@@ -7,5 +7,15 @@ declare module "styled-components" {
     cardColor: string;
     pointColor: string;
     boxShadow: string;
+    colorTheme: {
+      point: string;
+      week_0: string;
+      week_1: string;
+      week_2: string;
+      week_3: string;
+      week_4: string;
+      week_5: string;
+      week_6: string;
+    };
   }
 }

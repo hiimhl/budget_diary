@@ -1,6 +1,9 @@
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ko";
 
+// Set Time Korea
+dayjs.locale("ko");
+
 // Get day of the week with number
 export function getWeek(data: number) {
   const list = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -9,11 +12,11 @@ export function getWeek(data: number) {
 
 // Today's time infomation
 export const day = dayjs();
-day.locale("ko");
 export const today = day.format("YYYY-MM-DD");
 export const month = day.format("MM");
 export const dayOfWeek = day.format("ddd");
 export const dayOfWeekFull = day.format("dddd"); // Full day
+export const setDefaultDate = day.format("YYYY-MM-DDTHH:mm");
 
 // Get Week list
 export function getWeekList(data: Dayjs) {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_DIARY } from "../store";
-import { setDefaultDate } from "../util/day";
+import { ADD_DIARY, ADD_SCHEDULE } from "../store";
+import { day } from "../util/day";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
@@ -22,10 +22,10 @@ interface IForm {
   date: string;
   title: string;
   memo: string;
-  emoji: string;
+  endDate: string;
 }
 
-function CreateDiary() {
+function CreateSchedule() {
   const {
     register,
     handleSubmit,
@@ -41,34 +41,24 @@ function CreateDiary() {
   const onSubmit = (data: IForm) => {
     if (window.confirm("저장하시겠습니까?")) {
       const date = data.date.slice(0, 10);
-      const time = data.date.slice(11);
       const obj = {
         title: data.title,
         date,
-        time,
+        startDate: data.date,
+        endDate: data.endDate,
         id,
-        emoji: data.emoji,
         memo: data.memo,
       };
-      dispatch({ type: ADD_DIARY, data: obj });
+      dispatch({ type: ADD_SCHEDULE, data: obj });
       reset();
       navigation("/");
     }
   };
+  const todayNineAM = day.format("YYYY-MM-DDT09:00");
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <ul>
-        <li>
-          <label htmlFor="date">날짜 : </label>
-          <input
-            {...register("date", { required: "날짜를 입력해주세요!" })}
-            id="date"
-            type="datetime-local"
-            defaultValue={setDefaultDate}
-          />
-          <p>{errors?.date?.message}</p>
-        </li>
         <li>
           <label htmlFor="title">메모 : </label>
           <input
@@ -85,20 +75,24 @@ function CreateDiary() {
           <p>{errors?.title?.message}</p>
         </li>
         <li>
+          <label htmlFor="date">시작일 : </label>
           <input
-            {...register("emoji")}
-            value="emoji_1"
-            id="emoji_1"
-            type="radio"
+            {...register("date", { required: "날짜를 입력해주세요!" })}
+            id="date"
+            type="datetime-local"
+            defaultValue={todayNineAM}
           />
-          <label htmlFor="emoji_1">image</label>
+          <p>{errors?.date?.message}</p>
+        </li>
+        <li>
+          <label htmlFor="endDate">종료일 : </label>
           <input
-            {...register("emoji")}
-            value="emoji_2"
-            id="emoji_2"
-            type="radio"
+            {...register("endDate", { required: "날짜를 입력해주세요!" })}
+            id="endDate"
+            type="datetime-local"
+            defaultValue={todayNineAM}
           />
-          <label htmlFor="emoji_2">image</label>
+          <p>{errors?.endDate?.message}</p>
         </li>
         <li>
           <label htmlFor="memo">메모 : </label>
@@ -111,4 +105,4 @@ function CreateDiary() {
   );
 }
 
-export default CreateDiary;
+export default CreateSchedule;

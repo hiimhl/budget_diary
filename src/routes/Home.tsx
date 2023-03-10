@@ -2,8 +2,6 @@ import dayjs from "dayjs";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import CreateAmount from "../components/CreateAmount";
-import CreateDiary from "../components/CreateDiary";
 import Header from "../components/Header";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
@@ -29,10 +27,6 @@ const DetailCard = styled.div`
   width: 100%;
 `;
 
-const Card = styled.div`
-  /* background-color: ${(props) => props.theme.pointColor}; */
-`;
-
 type Idd = [string, string];
 
 function Home() {
@@ -43,12 +37,10 @@ function Home() {
   const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const DiaryData = useSelector((state: any) => state.diary);
 
-  const theme = "rainbow";
-
   return (
     <Wrapper>
-      <Header />
-      <CreateAmount />
+      <Header leftBtn={"Today"} middleBtn={"Add"} rightBtn={"Month"} />
+      {/* <CreateAmount /> */}
       {/* <CreateDiary /> */}
       <DetailCard>
         <TodayCard />

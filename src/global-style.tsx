@@ -7,6 +7,11 @@ ${reset}
 menu, ol, ul {
   list-style: none;
 }
+button{
+  background-color: transparent;
+  border:none;
+  cursor: pointer;
+}
 * {
   box-sizing: border-box;
 }

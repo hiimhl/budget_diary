@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { ThemeProvider } from "styled-components";
 import App from "./App";
-import { lightTheme } from "./theme";
+import { blueTheme } from "./theme";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
@@ -12,7 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={blueTheme}>
         <App />
       </ThemeProvider>
     </Provider>

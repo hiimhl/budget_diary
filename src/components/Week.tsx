@@ -21,19 +21,34 @@ const WeekWrapper = styled.div<{ userTheme: string }>`
     li {
       display: grid;
       grid-template-columns: 10% 10% 80%;
-      background-color: pink;
       margin: ${space.small} 0;
       padding: 13px ${space.middle};
       border-radius: ${borderRadius.small};
-      border-top: 10px red solid;
     }
     .today {
       padding-bottom: ${space.large};
     }
   }
-  .${(props) => props.userTheme} {
-    .li_0 {
-    }
+  .week_0 {
+    background-color: ${(props) => props.theme.colorTheme.week_0};
+  }
+  .week_1 {
+    background-color: ${(props) => props.theme.colorTheme.week_1};
+  }
+  .week_2 {
+    background-color: ${(props) => props.theme.colorTheme.week_2};
+  }
+  .week_3 {
+    background-color: ${(props) => props.theme.colorTheme.week_3};
+  }
+  .week_4 {
+    background-color: ${(props) => props.theme.colorTheme.week_4};
+  }
+  .week_5 {
+    background-color: ${(props) => props.theme.colorTheme.week_5};
+  }
+  .week_6 {
+    background-color: ${(props) => props.theme.colorTheme.week_6};
   }
 `;
 
@@ -78,7 +93,7 @@ function Week() {
 
           const day = getWeek(index);
           return (
-            <li key={`week_${index}`} className={`li_${index}`}>
+            <li key={`week_${index}`} className={`week_${index}`}>
               <b>{day}</b>
               <span>{list.slice(-2)}일</span>
               <div>

@@ -9,6 +9,9 @@ export interface IState {
     diary: {
       [key: string]: IDiary;
     };
+    schedule: {
+      [key: string]: ISchdule[];
+    };
   };
 }
 
@@ -30,6 +33,15 @@ interface IDiary {
   id: string;
   memo: string;
   emoji: string;
+}
+
+export interface ISchdule {
+  title: string;
+  date: string;
+  startDate: string;
+  endDate: string;
+  id: string;
+  memo: string;
 }
 
 interface IAction {
@@ -77,15 +89,28 @@ export const initialState: IState = {
       ],
     },
     diary: {},
+    schedule: {
+      "2023-03-10": [
+        {
+          title: "코딩",
+          date: "2023-03-10",
+          startDate: "",
+          endDate: "2023-03-12",
+          id: "",
+          memo: "코딩하기",
+        },
+      ],
+    },
   },
 };
 
 // Type
 export const ADD_BUDGET = "ADD_BUDGET";
 export const ADD_DIARY = "ADD_DIARY";
+export const ADD_SCHEDULE = "ADD_SCHEDULE";
 export const REMOVE_BUDGET = "REMOVE_BUDGET";
 
-type IType = "ADD_BUDGET" | "ADD_DIARY" | "REMOVE_BUDGET";
+type IType = "ADD_BUDGET" | "ADD_DIARY" | "REMOVE_BUDGET" | "ADD_SCHEDULE";
 
 // Reducer
 export function reducer(
@@ -102,6 +127,7 @@ export function reducer(
             [date]: [...(state.data.budgetBook[date] ?? []), action.data],
           },
           diary: state.data.diary,
+          schedule: state.data.schedule,
         },
       };
     case REMOVE_BUDGET:
@@ -115,8 +141,24 @@ export function reducer(
             [date]: action.data,
           },
           budgetBook: state.data.budgetBook,
+          schedule: state.data.schedule,
         },
       };
+    case ADD_SCHEDULE:
+      return {
+        data: {
+          budgetBook: state.data.budgetBook,
+          diary: state.data.diary,
+          schedule: {
+            ...state.data.schedule,
+            [action.data.date]: [
+              ...(state.data.schedule[action.data.date] ?? []),
+              action.data,
+            ],
+          },
+        },
+      };
+
     // case EDIT_DIARY: {
     //   const { title, content, date } = action.data;
 

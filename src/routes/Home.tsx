@@ -6,7 +6,7 @@ import Header from "../components/Header";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
 import { IBudget, IState } from "../store";
-import { borderRadius, font, fontSize, rainbow, space } from "../style-root";
+import { borderRadius, boxShadow, font, fontSize, space } from "../style-root";
 import { day, getWeek, getWeekList, today } from "../util/day";
 
 // Style
@@ -15,7 +15,7 @@ export const Wrapper = styled.div`
   margin: 0 auto;
   height: 100vh;
   background-color: ${(props) => props.theme.cardColor};
-  box-shadow: ${(props) => props.theme.boxShadow};
+  box-shadow: ${boxShadow.large};
 
   @media only screen and (max-width: 768px) {
     width: 100%;

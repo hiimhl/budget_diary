@@ -1,13 +1,11 @@
 import { DefaultTheme } from "styled-components";
 
 export const blueTheme: DefaultTheme = {
-  textColor: "",
+  textColor: "#000000",
   backgroundColor: "#f6f6f6",
-  pointColor: "",
+  pointColor: "#96B6FF",
   cardColor: "#ffffff",
-  boxShadow: "rgba(100, 100, 111, 0.2) 0px 10px 29px 0px",
-  colorTheme: {
-    point: "#96B6FF",
+  weekColor: {
     week_0: "#EDF2FB",
     week_1: "#E2EAFC",
     week_2: "#D7E3FC",
@@ -19,13 +17,11 @@ export const blueTheme: DefaultTheme = {
 };
 
 export const rainbowTheme: DefaultTheme = {
-  textColor: "",
+  textColor: "#000000",
   backgroundColor: "#f6f6f6",
-  pointColor: "",
+  pointColor: "#A3C4F3",
   cardColor: "#ffffff",
-  boxShadow: "rgba(100, 100, 111, 0.2) 0px 10px 29px 0px",
-  colorTheme: {
-    point: "#FFCFD2",
+  weekColor: {
     week_0: "#FBF8CC",
     week_1: "#FDE4CF",
     week_2: "#FFCFD2",
@@ -33,5 +29,53 @@ export const rainbowTheme: DefaultTheme = {
     week_4: "#A3C4F3",
     week_5: "#90DBF4",
     week_6: "#98F5E1",
+  },
+};
+
+export const vividTheme: DefaultTheme = {
+  textColor: "#000000",
+  backgroundColor: "#f6f6f6",
+  pointColor: "#DEAAFF",
+  cardColor: "#ffffff",
+  weekColor: {
+    week_0: "#CBF3F5",
+    week_1: "#C8E7FF",
+    week_2: "#D0D1FF",
+    week_3: "#DEAAFF",
+    week_4: "#ECBCFD",
+    week_5: "#F3C4FB",
+    week_6: "#FFCBF2",
+  },
+};
+
+export const roseTheme: DefaultTheme = {
+  textColor: "#000000",
+  backgroundColor: "#f6f6f6",
+  pointColor: "#FF758F",
+  cardColor: "#ffffff",
+  weekColor: {
+    week_0: "#FFF0F3",
+    week_1: "#FFCCD5",
+    week_2: "#FFB3C1",
+    week_3: "#FF8FA3",
+    week_4: "#FF758F",
+    week_5: "#FF97B7",
+    week_6: "#F4ACB7",
+  },
+};
+
+export const greenTheme: DefaultTheme = {
+  textColor: "#000000",
+  backgroundColor: "#f6f6f6",
+  pointColor: "#52B788",
+  cardColor: "#ffffff",
+  weekColor: {
+    week_0: "#F2FEF4",
+    week_1: "#D8F3DC",
+    week_2: "#B7E4C7",
+    week_3: "#95D5B2",
+    week_4: "#74C69D",
+    week_5: "#52B788",
+    week_6: "#70AD91",
   },
 };

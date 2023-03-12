@@ -6,16 +6,7 @@ import { ADD_DIARY, ADD_SCHEDULE } from "../store";
 import { day } from "../util/day";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-
-const Form = styled.form`
-  li {
-    margin: 10px 0;
-    padding: 10px 20px;
-    background-color: pink;
-    display: grid;
-    grid-template-columns: 40% 60%;
-  }
-`;
+import { FormCard, VerticalLine } from "./CreateAmount";
 
 // Interface
 interface IForm {
@@ -56,52 +47,66 @@ function CreateSchedule() {
   };
   const todayNineAM = day.format("YYYY-MM-DDT09:00");
 
+  const onCancel = () => {
+    if (window.confirm("취소하시겠습니까?")) {
+      navigation("/");
+    }
+  };
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      <ul>
-        <li>
-          <label htmlFor="title">메모 : </label>
-          <input
-            {...register("title", {
-              required: "내역을 입력해주세요!",
-              minLength: {
-                value: 2,
-                message: "2글자 이상 입력해주세요.",
-              },
-            })}
-            type="text"
-            id="title"
-          />
-          <p>{errors?.title?.message}</p>
-        </li>
-        <li>
-          <label htmlFor="date">시작일 : </label>
-          <input
-            {...register("date", { required: "날짜를 입력해주세요!" })}
-            id="date"
-            type="datetime-local"
-            defaultValue={todayNineAM}
-          />
-          <p>{errors?.date?.message}</p>
-        </li>
-        <li>
-          <label htmlFor="endDate">종료일 : </label>
-          <input
-            {...register("endDate", { required: "날짜를 입력해주세요!" })}
-            id="endDate"
-            type="datetime-local"
-            defaultValue={todayNineAM}
-          />
-          <p>{errors?.endDate?.message}</p>
-        </li>
-        <li>
-          <label htmlFor="memo">메모 : </label>
-          <textarea {...register("memo")} id="memo" />
-        </li>
-      </ul>
-      <input type="submit" value="확인" />
-      <button>취소</button>
-    </Form>
+    <FormCard onSubmit={handleSubmit(onSubmit)}>
+      <h2>오늘의 할일</h2>
+      <form>
+        <ul>
+          <li>
+            <label htmlFor="title">메모 : </label>
+            <input
+              {...register("title", {
+                required: "내역을 입력해주세요!",
+                minLength: {
+                  value: 2,
+                  message: "2글자 이상 입력해주세요.",
+                },
+              })}
+              type="text"
+              id="title"
+            />
+            <p>{errors?.title?.message}</p>
+          </li>
+          <li>
+            <label htmlFor="date">시작일 : </label>
+            <input
+              {...register("date", { required: "날짜를 입력해주세요!" })}
+              id="date"
+              type="datetime-local"
+              defaultValue={todayNineAM}
+            />
+          </li>
+          <li>
+            <label htmlFor="endDate">종료일 : </label>
+            <input
+              {...register("endDate", { required: "날짜를 입력해주세요!" })}
+              id="endDate"
+              type="datetime-local"
+              defaultValue={todayNineAM}
+            />
+          </li>
+          <li>
+            <label htmlFor="memo">메모 : </label>
+            <textarea {...register("memo")} id="memo" />
+          </li>
+        </ul>
+        <div className="submit_box">
+          <button className="submit" type="submit">
+            확인
+          </button>
+          <button className="cancel" onClick={onCancel}>
+            취소
+          </button>
+        </div>
+        <VerticalLine />
+      </form>
+    </FormCard>
   );
 }
 

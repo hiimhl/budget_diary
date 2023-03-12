@@ -4,8 +4,8 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { IState } from "../store";
-import { borderRadius, font, fontSize, rainbow, space } from "../style-root";
-import { day, getWeek, getWeekList } from "../util/day";
+import { borderRadius, boxShadow, font, fontSize, space } from "../style-root";
+import { day, getWeek, getWeekList, today } from "../util/day";
 
 const WeekWrapper = styled.div<{ userTheme: string }>`
   width: 85%;
@@ -24,31 +24,34 @@ const WeekWrapper = styled.div<{ userTheme: string }>`
       margin: ${space.small} 0;
       padding: 13px ${space.middle};
       border-radius: ${borderRadius.small};
+      box-shadow: ${boxShadow.small};
     }
     .today {
-      padding-bottom: ${space.large};
+      padding-bottom: ${space.xlarge};
+      border: 2px solid ${(props) => props.theme.pointColor};
+      /* font-weight: 500; */
     }
   }
   .week_0 {
-    background-color: ${(props) => props.theme.colorTheme.week_0};
+    background-color: ${(props) => props.theme.weekColor.week_0};
   }
   .week_1 {
-    background-color: ${(props) => props.theme.colorTheme.week_1};
+    background-color: ${(props) => props.theme.weekColor.week_1};
   }
   .week_2 {
-    background-color: ${(props) => props.theme.colorTheme.week_2};
+    background-color: ${(props) => props.theme.weekColor.week_2};
   }
   .week_3 {
-    background-color: ${(props) => props.theme.colorTheme.week_3};
+    background-color: ${(props) => props.theme.weekColor.week_3};
   }
   .week_4 {
-    background-color: ${(props) => props.theme.colorTheme.week_4};
+    background-color: ${(props) => props.theme.weekColor.week_4};
   }
   .week_5 {
-    background-color: ${(props) => props.theme.colorTheme.week_5};
+    background-color: ${(props) => props.theme.weekColor.week_5};
   }
   .week_6 {
-    background-color: ${(props) => props.theme.colorTheme.week_6};
+    background-color: ${(props) => props.theme.weekColor.week_6};
   }
 `;
 
@@ -90,10 +93,14 @@ function Week() {
               return prev + current.amount;
             }, 0);
           }
+          let isToday = "";
+          if (list === today) {
+            isToday = "today";
+          }
 
           const day = getWeek(index);
           return (
-            <li key={`week_${index}`} className={`week_${index}`}>
+            <li key={`week_${index}`} className={`week_${index} ${isToday}`}>
               <b>{day}</b>
               <span>{list.slice(-2)}일</span>
               <div>

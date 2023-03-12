@@ -7,7 +7,7 @@ import { dayOfWeek, today } from "../util/day";
 import { borderRadius } from "../style-root";
 
 const Card = styled.div`
-  background-color: ${(props) => props.theme.colorTheme.week_2};
+  background-color: ${(props) => props.theme.weekColor.week_2};
   padding: 15px;
   height: 250px;
   width: 75%;

@@ -6,9 +6,7 @@ declare module "styled-components" {
     backgroundColor: string;
     cardColor: string;
     pointColor: string;
-    boxShadow: string;
-    colorTheme: {
-      point: string;
+    weekColor: {
       week_0: string;
       week_1: string;
       week_2: string;

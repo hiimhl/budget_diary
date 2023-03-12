@@ -15,7 +15,7 @@ const Wrapper = styled.header`
   }
 
   nav {
-    border-bottom: 2px dashed ${(props) => props.theme.colorTheme.point};
+    border-bottom: 2px dashed ${(props) => props.theme.pointColor};
     display: flex;
     align-items: center;
     padding: 15px;

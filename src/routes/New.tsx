@@ -11,12 +11,20 @@ function New() {
   // choose the diary/amount/schedule
   return (
     <Wrapper>
-      <Header />
-      <button onClick={() => navigation("/new/diary")}>diary</button>
+      <Header
+        leftBtn={<button onClick={() => navigation("/new/")}>가계부</button>}
+        middleBtn={
+          <button onClick={() => navigation("/new/diary")}>일기</button>
+        }
+        rightBtn={
+          <button onClick={() => navigation("/new/schedule")}>할일</button>
+        }
+      />
+
       <Routes>
         <Route path="/diary" element={<CreateDiary />} />
-        <Route path="/amout" element={<CreateAmount />} />
-        <Route path="/" element={<CreateSchedule />} />
+        <Route path="/" element={<CreateAmount />} />
+        <Route path="/schedule" element={<CreateSchedule />} />
       </Routes>
     </Wrapper>
   );

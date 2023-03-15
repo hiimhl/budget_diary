@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { ADD_BUDGET } from "../store";
+import { ADD_BUDGET, EDIT_BUDGET } from "../store";
 import { day, setDefaultDate } from "../util/day";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
   borderRadius,
@@ -16,6 +16,7 @@ import {
   space,
 } from "../style-root";
 
+// Style
 export const FormCard = styled.section`
   background-color: ${(props) => props.theme.weekColor.week_2};
   width: 90%;
@@ -137,7 +138,7 @@ export const MyInput = styled.input`
   &:focus {
     outline: none;
     border-color: ${(props: IIsvalid) =>
-      props.isValid ? colorSet.red : "black"};
+      props.isValid ? "black" : colorSet.red};
   }
 `;
 
@@ -169,47 +170,70 @@ interface IForm {
 }
 
 export type IIsvalid = {
-  isValid?: string | undefined;
+  isValid?: boolean | undefined;
 };
 
+// Component
 function CreateAmount() {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
+    setValue,
   } = useForm<IForm>();
   const dispatch = useDispatch();
 
   const [isPositive, setIsPositive] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   const navigation = useNavigate();
   const id = uuidv4();
 
+  // Set the value of the form - Edit page
+  const location = useLocation();
+  const editData = location.state;
+
+  useEffect(() => {
+    if (editData) {
+      console.log(editData);
+      setIsEdit(true);
+      const dateTime = editData.date + "T" + editData.time;
+      setValue("date", dateTime);
+      setValue("amount", editData.amount);
+      setValue("title", editData.title);
+      setValue("category", editData.category);
+      setValue("pay", editData.pay);
+      setValue("memo", editData.memo);
+    }
+  }, []);
+
   // Send data to the Store
   const onSubmit = (data: IForm) => {
-    if (window.confirm("저장하시겠습니까?")) {
-      const date = data.date.slice(0, 10);
-      const time = data.date.slice(11);
+    const date = data.date.slice(0, 10);
+    const time = data.date.slice(11);
 
-      // Make amount Positive or Negative
-      const amountoNumber = parseInt(data.amount);
-      const amount = isPositive ? amountoNumber : -amountoNumber;
+    // Make amount Positive or Negative
+    const amountToNumber = parseInt(data.amount);
+    const amount = isPositive ? amountToNumber : -amountToNumber;
 
-      const obj = {
-        title: data.title,
-        amount,
-        date,
-        time,
-        id,
-        category: data.category,
-        pay: data.pay,
-        memo: data.memo,
-      };
-      dispatch({ type: ADD_BUDGET, data: obj });
-      reset();
-      navigation("/");
-    }
+    const obj = {
+      title: data.title,
+      amount,
+      date,
+      time,
+      id: isEdit ? editData.id : id,
+      category: data.category,
+      pay: data.pay,
+      memo: data.memo,
+    };
+
+    dispatch({ type: isEdit ? EDIT_BUDGET : ADD_BUDGET, data: obj });
+    reset();
+
+    // navigate
+    isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+    setIsEdit(false);
   };
 
   // Set positive or negative
@@ -217,7 +241,7 @@ function CreateAmount() {
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      navigation("/");
+      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
     }
   };
 
@@ -255,7 +279,7 @@ function CreateAmount() {
               })}
               type="text"
               id="title"
-              isValid={errors.title?.message}
+              isValid={isValid}
             />
             <p>{errors?.title?.message}</p>
           </li>
@@ -269,7 +293,7 @@ function CreateAmount() {
                   message: "2글자 이상 입력해주세요.",
                 },
               })}
-              isValid={errors?.amount?.message}
+              isValid={isValid}
               type="number"
               id="amount"
             />

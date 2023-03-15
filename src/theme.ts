@@ -24,11 +24,11 @@ export const rainbowTheme: DefaultTheme = {
   weekColor: {
     week_0: "#FBF8CC",
     week_1: "#FDE4CF",
-    week_2: "#FFCFD2",
-    week_3: "#CFBAF0",
-    week_4: "#A3C4F3",
-    week_5: "#90DBF4",
-    week_6: "#98F5E1",
+    week_2: "#FFE2E3",
+    week_3: "#DFD0F7",
+    week_4: "#C8D9F1",
+    week_5: "#CDEDF8",
+    week_6: "#CDF2EA",
   },
 };
 
@@ -38,12 +38,12 @@ export const vividTheme: DefaultTheme = {
   pointColor: "#DEAAFF",
   cardColor: "#ffffff",
   weekColor: {
-    week_0: "#CBF3F5",
-    week_1: "#C8E7FF",
-    week_2: "#D0D1FF",
-    week_3: "#DEAAFF",
-    week_4: "#ECBCFD",
-    week_5: "#F3C4FB",
+    week_0: "#D6FFF1",
+    week_1: "#CBF3F5",
+    week_2: "#C8E7FF",
+    week_3: "#D0D1FF",
+    week_4: "#DEAAFF",
+    week_5: "#ECBCFD",
     week_6: "#FFCBF2",
   },
 };
@@ -55,12 +55,12 @@ export const roseTheme: DefaultTheme = {
   cardColor: "#ffffff",
   weekColor: {
     week_0: "#FFF0F3",
-    week_1: "#FFCCD5",
-    week_2: "#FFB3C1",
-    week_3: "#FF8FA3",
-    week_4: "#FF758F",
-    week_5: "#FF97B7",
-    week_6: "#F4ACB7",
+    week_1: "#FEE6EA",
+    week_2: "#FFD8DF",
+    week_3: "#FFCCD5",
+    week_4: "#FFB4C2",
+    week_5: "#FB9DAF",
+    week_6: "#FF8FA0",
   },
 };
 

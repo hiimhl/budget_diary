@@ -1,12 +1,12 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { font } from "../style-root";
+import { font, fontWeight } from "../style-root";
 
 const Wrapper = styled.header`
   width: 650px;
   margin: auto;
-  height: 10vh;
+  height: 11vh;
   font-family: ${font.eng};
 
   /* Tablet */
@@ -30,10 +30,23 @@ const Wrapper = styled.header`
     display: flex;
     justify-content: space-between;
     font-size: 18px;
+
+    button {
+      font-size: 16px;
+      font-weight: ${fontWeight.title};
+    }
   }
 `;
 
-function Header(props: any) {
+// Interface
+interface IProps {
+  leftBtn?: ReactNode | string;
+  middleBtn?: ReactNode | string;
+  rightBtn?: ReactNode | string;
+}
+
+// Component
+function Header({ leftBtn, middleBtn, rightBtn }: IProps) {
   const navigation = useNavigate();
 
   // Go to Home
@@ -45,9 +58,9 @@ function Header(props: any) {
         <button>Menu</button>
       </nav>
       <div>
-        <span>{props.leftBtn}</span>
-        <span>{props.middleBtn}</span>
-        <span>{props.rightBtn}</span>
+        <span>{leftBtn}</span>
+        <span>{middleBtn}</span>
+        <span>{rightBtn}</span>
       </div>
     </Wrapper>
   );

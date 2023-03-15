@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { IState } from "../store";
@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { dayOfWeek, today } from "../util/day";
 import { borderRadius } from "../style-root";
 
+// Style
 const Card = styled.div`
   background-color: ${(props) => props.theme.weekColor.week_2};
   padding: 15px;
@@ -15,11 +16,17 @@ const Card = styled.div`
   border-radius: ${borderRadius.large};
 `;
 
+const Content = styled.div`
+  cursor: pointer;
+  height: 90%;
+`;
+
+// Component
 function TodayCard() {
   const data = useSelector((state: IState) => state.data);
   const navigation = useNavigate();
 
-  const todayBudget = data.budgetBook[today];
+  let todayBudget = data.budgetBook[today];
   const todayDiary = data.diary[today];
   const todaySchdule = data.schedule[today];
 
@@ -30,11 +37,11 @@ function TodayCard() {
       return prev + current.amount;
     }, 0);
   } else if (todayBudget && todayBudget.length === 1) {
-    totalAmount = todayBudget[0].amount;
+    totalAmount = todayBudget[0].amount!;
   }
 
   // Go to Detail page
-  const onToDetail = () => navigation("/detail");
+  const onToDetail = () => navigation(`/detail/${today}`);
   const onCreate = () => navigation("/new");
 
   return (
@@ -43,7 +50,7 @@ function TodayCard() {
         {today.slice(-2)}일 {dayOfWeek}
       </h2>
       {todayBudget || todayDiary || todaySchdule ? (
-        <>
+        <Content onClick={onToDetail}>
           <div>
             <span>총 지출 : {totalAmount}원</span>
             {todayDiary && (
@@ -59,8 +66,7 @@ function TodayCard() {
             {todaySchdule &&
               todaySchdule.map((data) => <li key={data.id}>{data.title}</li>)}
           </ul>
-          <button onClick={onCreate}>추가하기</button>
-        </>
+        </Content>
       ) : (
         <>
           <span>일정을 추가해주세요</span>

@@ -1,11 +1,12 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
-import { IBudget, IState } from "../store";
+import { IState } from "../store";
 import { borderRadius, boxShadow, font, fontSize, space } from "../style-root";
 import { day, getWeek, getWeekList, today } from "../util/day";
 
@@ -27,21 +28,23 @@ const DetailCard = styled.div`
   width: 100%;
 `;
 
-type Idd = [string, string];
-
 function Home() {
   const [add, setAdd] = useState(false);
 
   const dayList = getWeekList(day);
+  const navigation = useNavigate();
 
   const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const DiaryData = useSelector((state: any) => state.diary);
+  const onCreate = () => navigation("/new");
 
   return (
     <Wrapper>
-      <Header leftBtn={"Today"} middleBtn={"Add"} rightBtn={"Month"} />
-      {/* <CreateAmount /> */}
-      {/* <CreateDiary /> */}
+      <Header
+        leftBtn={"Today"}
+        middleBtn={<button onClick={onCreate}>추가하기</button>}
+        rightBtn={"Month"}
+      />
       <DetailCard>
         <TodayCard />
         <Week />

@@ -2,6 +2,7 @@
 import { Dayjs } from "dayjs";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IState } from "../store";
 import { borderRadius, boxShadow, font, fontSize, space } from "../style-root";
@@ -19,6 +20,7 @@ const WeekWrapper = styled.div<{ userTheme: string }>`
     width: 95%;
     margin: auto;
     li {
+      cursor: pointer;
       display: grid;
       grid-template-columns: 10% 10% 80%;
       margin: ${space.small} 0;
@@ -62,6 +64,8 @@ function Week() {
   const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const diaryData = useSelector((state: IState) => state.data.diary);
 
+  const navigation = useNavigate();
+
   // console.log(Object.keys(budgetData));
   const theme = "rainbow";
 
@@ -86,11 +90,12 @@ function Week() {
         <button onClick={onNextWeeks}>next</button>
       </div>
       <ul>
-        {dayList.map((list: any, index: number) => {
+        {dayList.map((list, index) => {
           let total = 0;
+
           if (budgetData[list]) {
-            total = budgetData[list].reduce((prev, current: any) => {
-              return prev + current.amount;
+            total = budgetData[list].reduce((prev, current) => {
+              return prev + current.amount!;
             }, 0);
           }
           let isToday = "";
@@ -100,7 +105,11 @@ function Week() {
 
           const day = getWeek(index);
           return (
-            <li key={`week_${index}`} className={`week_${index} ${isToday}`}>
+            <li
+              onClick={() => navigation(`/detail/${list}`)}
+              key={`week_${index}`}
+              className={`week_${index} ${isToday}`}
+            >
               <b>{day}</b>
               <span>{list.slice(-2)}일</span>
               <div>

@@ -18,7 +18,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <ThemeProvider theme={greenTheme}>
+      <ThemeProvider theme={vividTheme}>
         <App />
       </ThemeProvider>
     </Provider>

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { ADD_DIARY } from "../store";
+import { ADD_DIARY, EDIT_DIARY } from "../store";
 import { setDefaultDate } from "../util/day";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { FormCard, VerticalLine } from "./CreateAmount";
+import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
 
 // Interface
 interface IForm {
@@ -16,35 +16,54 @@ interface IForm {
   emoji: string;
 }
 
+// Component
 function CreateDiary() {
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    setValue,
+    formState: { errors, isValid },
   } = useForm<IForm>();
   const dispatch = useDispatch();
+  const [isEdit, setIsEdit] = useState(false);
 
   const id = uuidv4();
   const navigation = useNavigate();
 
+  // Set the value of the form - Edit page
+  const location = useLocation();
+  const editData = location.state;
+
+  useEffect(() => {
+    if (editData) {
+      console.log(editData);
+      setIsEdit(true);
+      const dateTime = editData.date + "T" + editData.time;
+      setValue("date", dateTime);
+      setValue("title", editData.title);
+      setValue("emoji", editData.emoji);
+      setValue("memo", editData.memo);
+    }
+  }, []);
+
   // Send data to the Store
   const onSubmit = (data: IForm) => {
-    if (window.confirm("저장하시겠습니까?")) {
-      const date = data.date.slice(0, 10);
-      const time = data.date.slice(11);
-      const obj = {
-        title: data.title,
-        date,
-        time,
-        id,
-        emoji: data.emoji,
-        memo: data.memo,
-      };
-      dispatch({ type: ADD_DIARY, data: obj });
-      reset();
-      navigation("/");
-    }
+    const date = data.date.slice(0, 10);
+    const time = data.date.slice(11);
+    const obj = {
+      title: data.title,
+      date,
+      time,
+      id,
+      emoji: data.emoji,
+      memo: data.memo,
+    };
+    dispatch({ type: isEdit ? EDIT_DIARY : ADD_DIARY, data: obj });
+    reset();
+
+    isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+    setIsEdit(false);
   };
 
   const onCancel = () => {
@@ -61,7 +80,7 @@ function CreateDiary() {
           <li>
             <label htmlFor="date">날짜 : </label>
             <input
-              {...register("date", { required: "날짜를 입력해주세요!" })}
+              {...register("date", { required: "날짜를 입력해주세요" })}
               id="date"
               type="datetime-local"
               defaultValue={setDefaultDate}
@@ -69,8 +88,8 @@ function CreateDiary() {
             <p>{errors?.date?.message}</p>
           </li>
           <li>
-            <label htmlFor="title">메모 : </label>
-            <input
+            <label htmlFor="title">제목 : </label>
+            <MyInput
               {...register("title", {
                 required: "내역을 입력해주세요!",
                 minLength: {
@@ -80,6 +99,7 @@ function CreateDiary() {
               })}
               type="text"
               id="title"
+              isValid={isValid}
             />
             <p>{errors?.title?.message}</p>
           </li>

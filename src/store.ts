@@ -4,118 +4,65 @@ import { legacy_createStore as createStore } from "redux";
 export interface IState {
   data: {
     budgetBook: {
-      [key: string]: IBudget[];
+      [key: string]: IData[];
     };
     diary: {
-      [key: string]: IDiary;
+      [key: string]: IData;
     };
     schedule: {
-      [key: string]: ISchdule[];
+      [key: string]: IData[];
     };
   };
 }
 
-export interface IBudget {
-  time: string;
+export interface IData {
+  id: string;
   title: string;
   date: string;
-  amount: number;
-  id: string;
-  category: string;
-  pay: string;
   memo: string;
+  amount?: number; // BudgetBook
+  category?: string; // BudgetBook
+  pay?: string; // BudgetBook
+  time?: string; // Diary, BudgetBook
+  emoji?: string; // Diary
+  startDate?: string; // Schedule
+  endDate?: string; // Schedule
 }
 
-interface IDiary {
-  time: string;
-  title: string;
-  date: string;
-  id: string;
-  memo: string;
-  emoji: string;
-}
+export const ADD_BUDGET = "ADD_BUDGET";
+export const ADD_DIARY = "ADD_DIARY";
+export const ADD_SCHEDULE = "ADD_SCHEDULE";
+export const EDIT_BUDGET = "EDIT_BUDGET";
+export const EDIT_DIARY = "EDIT_DIARY";
+export const EDIT_SCHEDULE = "EDIT_SCHEDULE";
+export const REMOVE_BUDGET = "REMOVE_BUDGET";
+export const REMOVE_DIARY = "REMOVE_DIARY";
+export const REMOVE_SCHEDULE = "REMOVE_SCHEDULE";
 
-export interface ISchdule {
-  title: string;
-  date: string;
-  startDate: string;
-  endDate: string;
-  id: string;
-  memo: string;
-}
-
-interface IAction {
-  type: IType;
-  data: IBudget | IDiary;
-}
+type IType =
+  | "ADD_BUDGET"
+  | "ADD_DIARY"
+  | "ADD_SCHEDULE"
+  | "EDIT_BUDGET"
+  | "EDIT_DIARY"
+  | "EDIT_SCHEDULE"
+  | "REMOVE_BUDGET"
+  | "REMOVE_DIARY"
+  | "REMOVE_SCHEDULE";
 
 // State
 export const initialState: IState = {
   data: {
-    budgetBook: {
-      "2023-03-09": [
-        {
-          time: "12:30",
-          title: "편의점",
-          date: "2023-03-09",
-          amount: -1200,
-          id: "2023-03-02-12-30-5",
-          category: "식비",
-          pay: "신용카드",
-          memo: "과자 냠냠",
-        },
-        {
-          time: "12:30",
-          title: "편의점",
-          date: "2023-03-09",
-          amount: -1200,
-          id: "2023-03-02-12-30-5",
-          category: "식비",
-          pay: "신용카드",
-          memo: "과자 냠냠",
-        },
-      ],
-      "2023-03-08": [
-        {
-          time: "12:30",
-          title: "편의점",
-          date: "2023-03-09",
-          amount: 1200,
-          id: "2023-03-02-12-30-5",
-          category: "식비",
-          pay: "신용카드",
-          memo: "과자 냠냠",
-        },
-      ],
-    },
+    budgetBook: {},
     diary: {},
-    schedule: {
-      "2023-03-10": [
-        {
-          title: "코딩",
-          date: "2023-03-10",
-          startDate: "",
-          endDate: "2023-03-12",
-          id: "",
-          memo: "코딩하기",
-        },
-      ],
-    },
+    schedule: {},
   },
 };
-
-// Type
-export const ADD_BUDGET = "ADD_BUDGET";
-export const ADD_DIARY = "ADD_DIARY";
-export const ADD_SCHEDULE = "ADD_SCHEDULE";
-export const REMOVE_BUDGET = "REMOVE_BUDGET";
-
-type IType = "ADD_BUDGET" | "ADD_DIARY" | "REMOVE_BUDGET" | "ADD_SCHEDULE";
 
 // Reducer
 export function reducer(
   state: IState = initialState,
-  action: { type: IType; data: any }
+  action: { type: IType; data: IData }
 ) {
   switch (action.type) {
     case ADD_BUDGET:
@@ -130,20 +77,19 @@ export function reducer(
           schedule: state.data.schedule,
         },
       };
-    case REMOVE_BUDGET:
-      return state;
 
     case ADD_DIARY:
       return {
         data: {
           diary: {
             ...state.data.diary,
-            [date]: action.data,
+            [action.data.date]: action.data,
           },
           budgetBook: state.data.budgetBook,
           schedule: state.data.schedule,
         },
       };
+
     case ADD_SCHEDULE:
       return {
         data: {
@@ -159,20 +105,86 @@ export function reducer(
         },
       };
 
-    // case EDIT_DIARY: {
-    //   const { title, content, date } = action.data;
+    // Updata data
+    case EDIT_BUDGET: {
+      const { date, id } = action.data;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          budgetBook: {
+            ...state.data.budgetBook,
+            [date]: state.data.budgetBook[date].map((list) =>
+              list.id === id ? { ...action.data } : list
+            ),
+          },
+        },
+      };
+    }
 
-    //   return {
-    //     ...state,
-    //     data: {
-    //       ...state.data,
-    //       [date]: {
-    //         diary: { title, content },
-    //         budgetBook: [...state.data[date].budgetBook],
-    //       },
-    //     },
-    //   };
-    // }
+    case EDIT_DIARY: {
+      const { date } = action.data;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          diary: {
+            ...state.data.diary,
+            [date]: action.data,
+          },
+        },
+      };
+      break;
+    }
+
+    case EDIT_SCHEDULE: {
+      const { date, id } = action.data;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          schedule: {
+            ...state.data.schedule,
+            [date]: state.data.schedule[date].map((list) =>
+              list.id === id ? { ...action.data } : list
+            ),
+          },
+        },
+      };
+      break;
+    }
+
+    // Remove data
+    case REMOVE_BUDGET: {
+      const { date, id } = action.data;
+
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          budgetBook: {
+            [date]: state.data.budgetBook[date].filter(
+              (list) => list.id !== id
+            ),
+          },
+        },
+      };
+    }
+    case REMOVE_DIARY: {
+      const { date } = action.data;
+
+      return {
+        ...state,
+        date: {
+          ...state.data,
+          diary: delete state.data.diary[date],
+        },
+      };
+    }
+    case REMOVE_SCHEDULE: {
+      return state;
+    }
+
     default:
       return state;
   }

@@ -6,7 +6,7 @@ import { ADD_DIARY, ADD_SCHEDULE } from "../store";
 import { day } from "../util/day";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { FormCard, VerticalLine } from "./CreateAmount";
+import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
 
 // Interface
 interface IForm {
@@ -21,10 +21,11 @@ function CreateSchedule() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    setValue,
+    formState: { errors, isValid },
   } = useForm<IForm>();
   const dispatch = useDispatch();
-
+  console.log(isValid);
   const id = uuidv4();
   const navigation = useNavigate();
 
@@ -59,8 +60,8 @@ function CreateSchedule() {
       <form>
         <ul>
           <li>
-            <label htmlFor="title">메모 : </label>
-            <input
+            <label htmlFor="title">제목 : </label>
+            <MyInput
               {...register("title", {
                 required: "내역을 입력해주세요!",
                 minLength: {
@@ -70,6 +71,7 @@ function CreateSchedule() {
               })}
               type="text"
               id="title"
+              isValid={isValid}
             />
             <p>{errors?.title?.message}</p>
           </li>

@@ -1,10 +1,30 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import styled from "styled-components";
 import CreateAmount from "../components/CreateAmount";
+import DetailList from "../components/DetailList";
 import Header from "../components/Header";
 import { IData, IState, REMOVE_BUDGET } from "../store";
+import { borderRadius, fontSize, fontWeight, space } from "../style-root";
 import { Wrapper } from "./Home";
+
+const Card = styled.div`
+  background-color: ${(props) => props.theme.weekColor.week_3};
+  padding: ${space.basic};
+  margin: ${space.basic};
+  width: 90%;
+  height: auto;
+  border-radius: ${borderRadius.large};
+
+  h3 {
+    font-size: ${fontSize.large};
+    font-weight: ${fontWeight.small};
+  }
+
+  ul {
+  }
+`;
 
 // Interface
 interface IAdd {
@@ -26,11 +46,6 @@ function Detail() {
   const budgetBook = data.budgetBook[date!];
   const schedule = data.schedule[date!];
 
-  const pageDate: IAdd = {
-    date,
-    data: budgetBook,
-  };
-
   // Go to New or Edit page
   const onAdd = () => navigation("/new", { state: date });
   const onEdit = (data: IData) => navigation("/new", { state: data });
@@ -45,32 +60,28 @@ function Detail() {
       <Header />
       <h1>{date}일 오늘의 기록</h1>
       <div>
-        <h3>할일 목록</h3>
-        <br />
-        <br />
-        <h3>가계부</h3>
-        <ul>
-          {budgetBook &&
-            budgetBook.map((list) => (
-              <li key={list.id}>
-                {list.title}
-                <button onClick={() => onEdit(list)}>수정</button>
-                <button onClick={() => onRemove(list)}>삭제</button>
-              </li>
-            ))}
-          <br />
-          <br />
-          <br />
-          {/* <li>저거</li>
-          <h3>가계부</h3>
-          <span>지출 | 입금</span>
+        <Card>
+          <h3>할일 목록</h3>
           <ul>
-            <li>과자 1200원</li>
-          </ul> */}
-        </ul>
-        {/* <button onClick={onAdd}>추가하기</button> */}
-        {/* <button onClick={onEdit}>수정</button> */}
-        {isEdit ? <CreateAmount /> : ""}
+            {schedule &&
+              schedule.map((list) => (
+                <DetailList key={list.id} data={list} type={"schedule"} />
+              ))}
+          </ul>
+        </Card>
+        <Card>
+          <h3>가계부</h3>
+          <ul>
+            {budgetBook &&
+              budgetBook.map((list) => (
+                <DetailList key={list.id} data={list} type={"budget"} />
+              ))}
+          </ul>
+        </Card>
+        <Card>
+          <h3>일기</h3>
+          {diary && <DetailList data={diary} type={"diary"} />}
+        </Card>
       </div>
     </Wrapper>
   );

@@ -196,7 +196,6 @@ function CreateAmount() {
 
   useEffect(() => {
     if (editData) {
-      console.log(editData);
       setIsEdit(true);
       const dateTime = editData.date + "T" + editData.time;
       setValue("date", dateTime);
@@ -245,7 +244,6 @@ function CreateAmount() {
     }
   };
 
-  console.log();
   return (
     <FormCard>
       <SelectPositive>

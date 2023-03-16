@@ -170,19 +170,32 @@ export function reducer(
         },
       };
     }
+
     case REMOVE_DIARY: {
       const { date } = action.data;
+      const { [date]: toRemove, ...otherData } = state.data.diary;
+      // [date]의 key값을 toRemove라는 변수에 저장
 
       return {
         ...state,
-        date: {
+        data: {
           ...state.data,
-          diary: delete state.data.diary[date],
+          diary: otherData,
         },
       };
     }
+
     case REMOVE_SCHEDULE: {
-      return state;
+      const { date, id } = action.data;
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          schedule: {
+            [date]: state.data.schedule[date].filter((list) => list.id !== id),
+          },
+        },
+      };
     }
 
     default:

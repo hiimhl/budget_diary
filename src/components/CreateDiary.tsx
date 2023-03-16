@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ADD_DIARY, EDIT_DIARY } from "../store";
 import { setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -37,8 +36,8 @@ function CreateDiary() {
 
   useEffect(() => {
     if (editData) {
-      console.log(editData);
       setIsEdit(true);
+      console.log(editData);
       const dateTime = editData.date + "T" + editData.time;
       setValue("date", dateTime);
       setValue("title", editData.title);
@@ -68,7 +67,7 @@ function CreateDiary() {
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      navigation("/");
+      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
     }
   };
 

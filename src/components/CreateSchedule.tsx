@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { ADD_DIARY, ADD_SCHEDULE } from "../store";
+import { useDispatch } from "react-redux";
+import { ADD_SCHEDULE, EDIT_SCHEDULE } from "../store";
 import { day } from "../util/day";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
 
@@ -22,12 +21,40 @@ function CreateSchedule() {
     handleSubmit,
     reset,
     setValue,
+    watch,
     formState: { errors, isValid },
   } = useForm<IForm>();
   const dispatch = useDispatch();
-  console.log(isValid);
+  const [isEdit, setIsEdit] = useState(false);
+
   const id = uuidv4();
   const navigation = useNavigate();
+
+  // DefaultValue of Date input - fiexd at 9AM today
+  const todayNineAM = day.format("YYYY-MM-DDT09:00");
+  const firstDate = watch("date");
+
+  const location = useLocation();
+  const editData = location.state;
+
+  // 마지막날의 기본 값을 사용자가 입력한 첫날로 설정
+  useEffect(() => {
+    if (!isEdit) {
+      setValue("endDate", firstDate);
+    }
+  }, [firstDate]);
+
+  // 수정할 데이터를 Form안에 넣음
+  useEffect(() => {
+    if (editData) {
+      console.log(editData);
+      setIsEdit(true);
+      setValue("date", editData.startDate);
+      setValue("endDate", editData.endDate);
+      setValue("title", editData.title);
+      setValue("memo", editData.memo);
+    }
+  }, []);
 
   // Send data to the Store
   const onSubmit = (data: IForm) => {
@@ -38,19 +65,20 @@ function CreateSchedule() {
         date,
         startDate: data.date,
         endDate: data.endDate,
-        id,
+        id: isEdit ? editData.id : id,
         memo: data.memo,
       };
-      dispatch({ type: ADD_SCHEDULE, data: obj });
+      dispatch({ type: isEdit ? EDIT_SCHEDULE : ADD_SCHEDULE, data: obj });
       reset();
-      navigation("/");
+
+      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+      setIsEdit(false);
     }
   };
-  const todayNineAM = day.format("YYYY-MM-DDT09:00");
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      navigation("/");
+      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
     }
   };
 

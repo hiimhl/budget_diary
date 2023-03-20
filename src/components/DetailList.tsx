@@ -2,21 +2,30 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { IData, REMOVE_BUDGET, REMOVE_DIARY, REMOVE_SCHEDULE } from "../store";
-import { fontSize, space } from "../style-root";
+import { borderRadius, colorSet, fontSize, space } from "../style-root";
 
 const Card = styled.li`
   list-style: none;
+  width: 100%;
   padding: ${space.micro};
+  background-color: ${(props) => props.theme.cardColor};
+  margin-bottom: ${space.micro};
+  border-radius: ${borderRadius.micro};
 `;
+
 const RemoveBtn = styled.button`
-  font-size: ${fontSize.small};
+  font-size: ${fontSize.micro};
   box-sizing: border-box;
+  border-radius: ${borderRadius.small};
   padding: ${space.micro} ${space.basic};
-  border: 1px solid red;
+  margin: 0 ${space.micro};
+  border: 2px solid ${colorSet.gray};
+  color: ${colorSet.gray};
 `;
 const EditBtn = styled(RemoveBtn)`
-  background-color: ${(props) => props.theme.pointColor};
-  border: none;
+  background-color: ${(props) => props.theme.weekColor.week_6};
+  border: 2px solid ${(props) => props.theme.pointColor};
+  color: white;
 `;
 
 function DetailList({ data, type }: any) {
@@ -59,7 +68,6 @@ function DetailList({ data, type }: any) {
       {type === "schedule" && (
         <>
           <h5>{data.title}</h5>
-          <b>{data.id}</b>
           <span>
             {data.startDate} ~ {data.endDate}
           </span>

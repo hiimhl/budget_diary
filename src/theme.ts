@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 export const blueTheme: DefaultTheme = {
   textColor: "#000000",
   backgroundColor: "#f6f6f6",
-  pointColor: "#96B6FF",
+  pointColor: "#6C94F1",
   cardColor: "#ffffff",
   weekColor: {
     week_0: "#EDF2FB",
@@ -11,8 +11,8 @@ export const blueTheme: DefaultTheme = {
     week_2: "#D7E3FC",
     week_3: "#CCDBFD",
     week_4: "#C1D3FE",
-    week_5: "#B6CCFE",
-    week_6: "#ABC4FF",
+    week_5: "#ACC5FE",
+    week_6: "#9FBAF9",
   },
 };
 
@@ -67,7 +67,7 @@ export const roseTheme: DefaultTheme = {
 export const greenTheme: DefaultTheme = {
   textColor: "#000000",
   backgroundColor: "#f6f6f6",
-  pointColor: "#52B788",
+  pointColor: "#45906D",
   cardColor: "#ffffff",
   weekColor: {
     week_0: "#F2FEF4",

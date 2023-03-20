@@ -12,12 +12,15 @@ export const space = {
 export const font = {
   eng: "Tilt Warp",
   kor: "IBM Plex Sans KR",
+  monospace: "Red Hat Mono",
 };
 
 export const fontSize = {
-  basic: "16px",
+  micro: "13px",
   small: "14px",
+  basic: "16px",
   large: "18px",
+  week: "20px",
   title: "24px",
 };
 
@@ -38,8 +41,11 @@ export const fontWeight = {
 };
 
 export const colorSet = {
+  white: "#F5F5F5",
+  black: "#333333",
   red: "#E6002B",
   blue: "#1670F0",
   lightGray: "#B6B6B6",
   gray: "#747474",
+  darkGray: "#5D5D5D",
 };

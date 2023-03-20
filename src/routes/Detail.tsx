@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import styled from "styled-components";
@@ -9,17 +10,24 @@ import { IData, IState, REMOVE_BUDGET } from "../store";
 import { borderRadius, fontSize, fontWeight, space } from "../style-root";
 import { Wrapper } from "./Home";
 
-const Card = styled.div`
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const Card = styled.section`
   background-color: ${(props) => props.theme.weekColor.week_3};
   padding: ${space.basic};
-  margin: ${space.basic};
-  width: 90%;
+  margin: auto;
+  width: 85%;
   height: auto;
   border-radius: ${borderRadius.large};
 
   h3 {
     font-size: ${fontSize.large};
     font-weight: ${fontWeight.small};
+    margin-bottom: ${space.basic};
   }
 
   ul {
@@ -37,8 +45,8 @@ function Detail() {
   const { date } = useParams();
   const navigation = useNavigate();
 
-  const [isEdit, setIsEdit] = useState(false);
-  const dispatch = useDispatch();
+  const month = date?.slice(5, 7);
+  const day = date?.slice(-2);
 
   // Get data
   const data = useSelector((state: IState) => state.data);
@@ -46,20 +54,25 @@ function Detail() {
   const budgetBook = data.budgetBook[date!];
   const schedule = data.schedule[date!];
 
-  // Go to New or Edit page
-  const onAdd = () => navigation("/new", { state: date });
-  const onEdit = (data: IData) => navigation("/new", { state: data });
-  const onRemove = (data: IData) => {
-    if (window.confirm("삭제하시겠습니까?")) {
-      dispatch({ type: REMOVE_BUDGET, data });
-    }
-  };
+  // Go to Previous or Next page
+  const getNextDay = dayjs(date).add(1, "day");
+  const nextDay = getNextDay.format("YYYY-MM-DD");
+
+  const getPrevDay = dayjs(date).subtract(1, "day");
+  const prevDay = getPrevDay.format("YYYY-MM-DD");
+
+  // const onPrevDay = () => navigation(`/detail/${}`);
+  const onPrevDay = () => navigation(`/detail/${prevDay}`);
+  const onNextDay = () => navigation(`/detail/${nextDay}`);
 
   return (
     <Wrapper>
-      <Header />
-      <h1>{date}일 오늘의 기록</h1>
-      <div>
+      <Header
+        leftBtn={<button onClick={onPrevDay}>Prev</button>}
+        middleBtn={`${month}월 ${day}일 기록`}
+        rightBtn={<button onClick={onNextDay}>Next</button>}
+      />
+      <Content>
         <Card>
           <h3>할일 목록</h3>
           <ul>
@@ -82,7 +95,7 @@ function Detail() {
           <h3>일기</h3>
           {diary && <DetailList data={diary} type={"diary"} />}
         </Card>
-      </div>
+      </Content>
     </Wrapper>
   );
 }

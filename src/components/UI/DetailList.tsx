@@ -1,8 +1,22 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IData, REMOVE_BUDGET, REMOVE_DIARY, REMOVE_SCHEDULE } from "../store";
-import { borderRadius, colorSet, fontSize, space } from "../style-root";
+import {
+  IData,
+  REMOVE_BUDGET,
+  REMOVE_DIARY,
+  REMOVE_SCHEDULE,
+} from "../../store";
+import {
+  borderRadius,
+  colorSet,
+  font,
+  fontSize,
+  fontWeight,
+  space,
+} from "../../style-root";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 const Card = styled.li`
   list-style: none;
@@ -13,18 +27,30 @@ const Card = styled.li`
   border-radius: ${borderRadius.micro};
 `;
 
+const Content = styled.div`
+  /* title */
+  h5 {
+    font-weight: ${fontWeight.small};
+  }
+`;
+
 const RemoveBtn = styled.button`
-  font-size: ${fontSize.micro};
+  font-size: ${fontSize.small};
   box-sizing: border-box;
   border-radius: ${borderRadius.small};
-  padding: ${space.micro} ${space.basic};
+  /* padding: ${space.micro} ${space.basic}; */
+  width: 50px;
+  height: 30px;
   margin: 0 ${space.micro};
   border: 2px solid ${colorSet.gray};
-  color: ${colorSet.gray};
+  color: ${colorSet.red};
 `;
+
 const EditBtn = styled(RemoveBtn)`
-  background-color: ${(props) => props.theme.weekColor.week_6};
-  border: 2px solid ${(props) => props.theme.pointColor};
+  font-family: ${font.kor};
+  /* background-color: ${(props) => props.theme.weekColor.week_6}; */
+  background-color: #52b788;
+  /* border: 2px solid ${(props) => props.theme.pointColor}; */
   color: white;
 `;
 
@@ -56,31 +82,36 @@ function DetailList({ data, type }: any) {
     }
   };
 
+  const onGoDetail = (type: string) =>
+    navigation(`/${data.date}/${type}/${data.id}`);
+
   return (
     <Card>
       {type === "budget" && (
-        <>
+        <Content onClick={() => onGoDetail("budgetBook")}>
           <h5>{data.title}</h5>
           <span>{data.date}</span>
-          <span>지출 :{data.amount}원</span>
-        </>
+          <p>지출 :{data.amount}원</p>
+        </Content>
       )}
       {type === "schedule" && (
-        <>
+        <Content onClick={() => onGoDetail("schedule")}>
           <h5>{data.title}</h5>
           <span>
             {data.startDate} ~ {data.endDate}
           </span>
-        </>
+        </Content>
       )}
       {type === "diary" && (
-        <>
+        <Content onClick={() => onGoDetail("diary")}>
           <h5>{data.title}</h5>
           <span>{data.date}</span>
-        </>
+        </Content>
       )}
       <EditBtn onClick={() => onEdit(data)}>수정</EditBtn>
-      <RemoveBtn onClick={() => onRemove(data)}>삭제</RemoveBtn>
+      <RemoveBtn onClick={() => onRemove(data)}>
+        <FontAwesomeIcon icon={faTrashCan} />
+      </RemoveBtn>
     </Card>
   );
 }

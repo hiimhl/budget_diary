@@ -16,8 +16,17 @@ import {
 } from "../style-root";
 import { day, getWeek, getWeekList, today } from "../util/day";
 
+// Icon - Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faBookmark,
+} from "@fortawesome/free-solid-svg-icons";
+import {
+  faCommentDots,
+  faSquareCheck,
+} from "@fortawesome/free-regular-svg-icons";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 config.autoAddCss = false;
@@ -61,34 +70,20 @@ const Box = styled.div`
 `;
 
 const MyList = styled.li`
-  align-items: center;
+  align-items: baseline;
   font-size: ${fontSize.small};
   cursor: pointer;
   display: grid;
-  grid-template-columns: 10% 15% 75%;
+  grid-template-columns: 25% 75%;
   margin: ${space.small} 0;
-  padding: 13px ${space.middle};
+  padding: ${space.basic} ${space.middle};
   border-radius: ${borderRadius.small};
   box-shadow: ${boxShadow.small};
-  /* color: ${colorSet.darkGray}; */
-
-  /* day of the week */
-  b {
-    font-family: ${font.monospace};
-    font-weight: ${fontWeight.small};
-    letter-spacing: 0.5px;
-    font-size: ${fontSize.basic};
-    /* font-family: ${font.eng}; */
-  }
-  /* day */
-  small {
-    font-size: ${fontSize.micro};
-  }
 
   /* Today */
   &.today {
     border-top: 4px solid ${(props) => props.theme.pointColor};
-    padding-bottom: ${space.xlarge};
+
     b {
       text-decoration: underline;
       font-weight: ${fontWeight.title};
@@ -100,6 +95,9 @@ const MyList = styled.li`
 
   &.week_0 {
     background-color: ${(props) => props.theme.weekColor.week_0};
+    b {
+      color: ${colorSet.nevative};
+    }
   }
   &.week_1 {
     background-color: ${(props) => props.theme.weekColor.week_1};
@@ -118,6 +116,73 @@ const MyList = styled.li`
   }
   &.week_6 {
     background-color: ${(props) => props.theme.weekColor.week_6};
+    b {
+      color: ${colorSet.positive};
+    }
+  }
+`;
+
+const TodayDate = styled.div`
+  position: relative;
+  /* day of the week */
+  b {
+    font-family: ${font.monospace};
+    font-weight: ${fontWeight.small};
+    letter-spacing: 0.5px;
+    font-size: ${fontSize.basic};
+    margin-right: 15px;
+  }
+  /* day */
+  small {
+    font-size: ${fontSize.micro};
+  }
+  /* Today Icon - book mark*/
+  i {
+    position: absolute;
+    left: -${space.mark};
+    top: 0;
+    font-size: ${fontSize.basic};
+    color: red;
+    box-shadow: ${boxShadow.small};
+  }
+`;
+const TodayContent = styled.div<{ isPositive: number }>`
+  position: relative;
+
+  /* Total amount */
+  .total {
+    color: ${(props) =>
+      props.isPositive === 1 ? colorSet.positive : colorSet.nevative};
+    font-weight: ${fontWeight.small};
+    width: 35%;
+  }
+
+  /* Schedule list */
+  ul {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 45% 55%;
+
+    /* Schedule item */
+    li {
+      margin: ${space.small} 0;
+      margin-right: ${space.small};
+      span {
+        font-weight: ${fontWeight.small};
+      }
+      /* icon */
+      svg {
+        margin-right: ${space.micro};
+      }
+    }
+  }
+
+  /* Note - Diary */
+  .note {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: ${fontSize.large};
   }
 `;
 
@@ -130,6 +195,7 @@ function Week() {
   const scheduleData = useSelector((state: IState) => state.data.schedule);
 
   const navigation = useNavigate();
+  const getMonth = weekData.format("MM").replace("0", "");
 
   // Get Next and Previous weeks
   const onNextWeeks = () => {
@@ -154,30 +220,56 @@ function Week() {
 
     // Get data
     const isToday = list === today ? "today" : "";
-    const isDiary = diaryData[list] ? "쪽지" : "";
+    const isDiary = diaryData[list] ? (
+      <i>
+        <FontAwesomeIcon className="note" icon={faCommentDots} />
+      </i>
+    ) : (
+      ""
+    );
+    const todayIcon =
+      list === today ? (
+        <i>
+          <FontAwesomeIcon icon={faBookmark} className="today_icon" />
+        </i>
+      ) : (
+        ""
+      );
+
     const isSchedule = //
-      scheduleData[list]
-        ? scheduleData[list].map((data) => (
-            <span key={data.id}>{data.title}</span>
-          ))
-        : "";
+      scheduleData[list] ? (
+        <ul>
+          {scheduleData[list].map((data) => (
+            <li key={data.id}>
+              <FontAwesomeIcon icon={faSquareCheck} />
+              <span>{data.startDate?.slice(-5, -3).replace("0", "")}시 - </span>
+              {data.title.slice(0, 6)}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        ""
+      );
 
     const day = getWeek(index);
+    const isPositive = Math.sign(total);
 
     return (
       <MyList
-        onClick={() => navigation(`/detail/${list}`)}
+        onClick={() => navigation(`/${list}`)}
         key={`week_${index}`}
         className={`week_${index} ${isToday}`}
       >
-        <b>{day}</b>
-
-        <small>{list.slice(-2)}일</small>
-        <div>
-          {total === 0 ? "" : <span>{total} 원 </span>}
-          <span>{isSchedule}</span>
-          <span>{isDiary}</span>
-        </div>
+        <TodayDate>
+          <b>{day}</b>
+          <small>{list.slice(-2)}일</small>
+          {todayIcon}
+        </TodayDate>
+        <TodayContent isPositive={isPositive}>
+          {total === 0 ? "" : <span className="total">{total}원 </span>}
+          {isSchedule}
+          {isDiary}
+        </TodayContent>
       </MyList>
     );
   });
@@ -190,7 +282,7 @@ function Week() {
           <button onClick={onPrevWeeks}>
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
-          <span>{weekData.format("MM")}월</span>
+          <span>{getMonth}월</span>
           <button onClick={onNextWeeks}>
             <FontAwesomeIcon icon={faAngleRight} />
           </button>

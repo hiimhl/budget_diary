@@ -7,6 +7,7 @@ export const space = {
   middle: "20px",
   large: "30px",
   xlarge: "40px",
+  mark: "45px",
 };
 
 export const font = {
@@ -48,4 +49,6 @@ export const colorSet = {
   lightGray: "#B6B6B6",
   gray: "#747474",
   darkGray: "#5D5D5D",
+  positive: "#00206A",
+  nevative: "#970027",
 };

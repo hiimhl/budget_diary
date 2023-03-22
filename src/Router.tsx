@@ -10,7 +10,7 @@ function Router() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/detail/:date" element={<Detail />} />
+        <Route path="/:date/*" element={<Detail />} />
         <Route path="/new/*" element={<New />} />
       </Routes>
     </HashRouter>

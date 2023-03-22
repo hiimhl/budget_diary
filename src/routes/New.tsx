@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import CreateAmount from "../components/CreateAmount";
 import CreateDiary from "../components/CreateDiary";
 import CreateSchedule from "../components/CreateSchedule";
@@ -8,10 +8,6 @@ import { Wrapper } from "./Home";
 
 function New() {
   const navigation = useNavigate();
-  // choose the diary/amount/schedule
-
-  const location = useLocation();
-  // console.log(location);
 
   return (
     <Wrapper>

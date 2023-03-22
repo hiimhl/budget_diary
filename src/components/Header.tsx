@@ -1,7 +1,9 @@
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { font, fontWeight } from "../style-root";
+import { colorSet, font, fontSize, fontWeight, space } from "../style-root";
 
 const Wrapper = styled.header`
   width: 650px;
@@ -18,23 +20,35 @@ const Wrapper = styled.header`
     border-bottom: 2px dashed ${(props) => props.theme.pointColor};
     display: flex;
     align-items: center;
-    padding: 15px;
+    padding: ${space.basic} ${space.middle};
     justify-content: space-between;
     font-size: 25px;
     span {
       cursor: pointer;
     }
-  }
-  div {
-    padding: 15px 10%;
-    display: flex;
-    justify-content: space-between;
-    font-size: 18px;
 
+    /* User Menu */
     button {
-      font-size: 16px;
-      font-weight: ${fontWeight.title};
+      font-size: ${fontSize.large};
     }
+  }
+`;
+
+const Children = styled.div`
+  padding: 15px 10%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+
+  button {
+    font-weight: ${fontWeight.title};
+    font-size: ${fontSize.basic};
+  }
+
+  /* Previous and Next button */
+  .leftRightBtn {
+    color: ${colorSet.darkGray};
+    font-size: ${fontSize.large};
   }
 `;
 
@@ -51,17 +65,20 @@ function Header({ leftBtn, middleBtn, rightBtn }: IProps) {
 
   // Go to Home
   const onLogo = () => navigation("/");
+  const onUserPage = () => navigation("/user");
   return (
     <Wrapper>
       <nav>
         <span onClick={onLogo}>logo</span>
-        <button>Menu</button>
+        <button onClick={onUserPage}>
+          <FontAwesomeIcon icon={faUser} />
+        </button>
       </nav>
-      <div>
+      <Children>
         <span>{leftBtn}</span>
         <span>{middleBtn}</span>
         <span>{rightBtn}</span>
-      </div>
+      </Children>
     </Wrapper>
   );
 }

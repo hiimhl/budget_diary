@@ -53,9 +53,60 @@ type IType =
 // State
 export const initialState: IState = {
   data: {
-    budgetBook: {},
-    diary: {},
-    schedule: {},
+    budgetBook: {
+      "2023-03-22": [
+        {
+          id: "012",
+          title: "편의점",
+          date: "2023-03-22",
+          time: "09:00",
+          memo: "과자 구매",
+          amount: -1000,
+          category: "eat",
+          pay: "credit",
+        },
+        {
+          id: "015",
+          title: "과자",
+          date: "2023-03-22",
+          time: "09:00",
+          memo: "과자 구매",
+          amount: -1200,
+          category: "eat",
+          pay: "credit",
+        },
+      ],
+    },
+    diary: {
+      "2023-03-22": {
+        id: "012333333333",
+        title: "편의점가기",
+        date: "2023-03-22",
+        memo: "과자 구매",
+        time: "09:00",
+        emoji: "",
+      },
+    },
+    schedule: {
+      "2023-03-22": [
+        {
+          id: "0123333",
+          title: "편의점가기",
+          date: "2023-03-22",
+          memo: "과자 구매",
+          startDate: "2023-03-22T09:00",
+          endDate: "2023-03-22T09:00",
+        },
+        {
+          id: "015444444",
+          title: "과자사기",
+          date: "2023-03-22",
+          memo: "과자 구매",
+          startDate: "2023-03-22T09:00",
+          endDate: "2023-03-18T09:00",
+        },
+      ],
+    },
   },
 };
 

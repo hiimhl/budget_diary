@@ -4,21 +4,75 @@ import { useSelector } from "react-redux";
 import { IState } from "../store";
 import { useNavigate } from "react-router-dom";
 import { dayOfWeek, today } from "../util/day";
-import { borderRadius } from "../style-root";
+import {
+  borderRadius,
+  colorSet,
+  fontSize,
+  fontWeight,
+  space,
+} from "../style-root";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentDots, faSquare } from "@fortawesome/free-regular-svg-icons";
 
 // Style
-const Card = styled.div`
+const Card = styled.section`
   background-color: ${(props) => props.theme.weekColor.week_2};
   padding: 15px;
   height: 250px;
   width: 75%;
   margin: auto;
   border-radius: ${borderRadius.large};
+  cursor: pointer;
+`;
+
+const DateBox = styled.div`
+  margin-bottom: ${space.basic};
+  h2 {
+    display: inline-block;
+  }
 `;
 
 const Content = styled.div`
+  background-color: ${colorSet.white};
+  padding: ${space.middle};
+  border-radius: ${borderRadius.small};
   cursor: pointer;
-  height: 90%;
+  height: auto;
+
+  /* All headers */
+  b {
+    font-weight: ${fontWeight.small};
+  }
+`;
+const InfoBox = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: ${space.small};
+
+  span {
+    display: grid;
+    grid-template-columns: 23% 75%;
+  }
+`;
+const ScheduleList = styled.div`
+  display: grid;
+  grid-template-columns: 23% 75%;
+  margin-top: ${space.basic};
+
+  b {
+    display: block;
+  }
+  ul {
+    li {
+      margin-bottom: ${space.micro};
+      /* icon */
+      svg {
+        margin-right: ${space.micro};
+        font-size: ${fontSize.small};
+      }
+    }
+  }
 `;
 
 // Component
@@ -41,31 +95,41 @@ function TodayCard() {
   }
 
   // Go to Detail page
-  const onToDetail = () => navigation(`/detail/${today}`);
+  const onToDetail = () => navigation(`/${today}`);
   const onCreate = () => navigation("/new");
 
   return (
-    <Card>
-      <h2>
-        {today.slice(-2)}일 {dayOfWeek}
-      </h2>
+    <Card onClick={onToDetail}>
+      <DateBox>
+        <h2>{today.slice(-2)}일</h2> <span>{dayOfWeek}</span>
+      </DateBox>
       {todayBudget || todayDiary || todaySchdule ? (
-        <Content onClick={onToDetail}>
-          <div>
-            <span>총 지출 : {totalAmount}원</span>
+        <Content>
+          <InfoBox>
+            <span>
+              <b>총 지출 : </b>
+              {totalAmount}원
+            </span>
             {todayDiary && (
-              <>
-                <p>{todayDiary.title}</p>
-                <div>{todayDiary.emoji}</div>
-              </>
+              <span>
+                <b>오늘의 기록 : </b>
+                {todayDiary.title}
+                <i>{todayDiary.emoji}</i>
+              </span>
             )}
-          </div>
-          {todayDiary && <div>쪽지</div>}
-          <ul>
-            할일 :
-            {todaySchdule &&
-              todaySchdule.map((data) => <li key={data.id}>{data.title}</li>)}
-          </ul>
+          </InfoBox>
+          <ScheduleList>
+            <b>할일 : </b>
+            <ul>
+              {todaySchdule &&
+                todaySchdule.map((data) => (
+                  <li key={data.id}>
+                    <FontAwesomeIcon icon={faSquare} />
+                    {data.title}
+                  </li>
+                ))}
+            </ul>
+          </ScheduleList>
         </Content>
       ) : (
         <>

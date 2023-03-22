@@ -34,6 +34,7 @@ function CreateSchedule() {
   const todayNineAM = day.format("YYYY-MM-DDT09:00");
   const firstDate = watch("date");
 
+  // Save the data received by Navigation Button
   const location = useLocation();
   const editData = location.state;
 

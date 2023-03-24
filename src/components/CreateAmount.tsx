@@ -210,7 +210,6 @@ function CreateAmount() {
   // Send data to the Store
   const onSubmit = (data: IForm) => {
     const date = data.date.slice(0, 10);
-    const time = data.date.slice(11);
 
     // Make amount Positive or Negative
     const amountToNumber = parseInt(data.amount);
@@ -220,7 +219,7 @@ function CreateAmount() {
       title: data.title,
       amount,
       date,
-      time,
+      time: data.date,
       id: isEdit ? editData.id : id,
       category: data.category,
       pay: data.pay,
@@ -231,7 +230,7 @@ function CreateAmount() {
     reset();
 
     // navigate
-    isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+    isEdit ? navigation(`/${editData.date}`) : navigation("/");
     setIsEdit(false);
   };
 
@@ -240,7 +239,7 @@ function CreateAmount() {
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+      isEdit ? navigation(`/${editData.date}`) : navigation("/");
     }
   };
 

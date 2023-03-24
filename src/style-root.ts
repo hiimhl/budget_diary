@@ -42,7 +42,7 @@ export const fontWeight = {
 };
 
 export const colorSet = {
-  white: "#F5F5F5",
+  white: "#FEFEFE",
   black: "#333333",
   red: "#E6002B",
   blue: "#1670F0",

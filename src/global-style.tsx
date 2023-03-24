@@ -4,7 +4,7 @@ import { font } from "./style-root";
 
 export const GlobalStyle = createGlobalStyle`
 ${reset}
-menu, ol, ul {
+menu, ol, ul,li {
   list-style: none;
 }
 button{

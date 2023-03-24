@@ -6,6 +6,44 @@ import { setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFaceAngry,
+  faFaceFrown,
+  faFaceGrin,
+  faFaceMeh,
+  faFaceSmile,
+} from "@fortawesome/free-regular-svg-icons";
+import styled from "styled-components";
+import { borderRadius, font, fontSize, fontWeight, space } from "../style-root";
+
+// Style
+const EmojiBox = styled.li`
+  span {
+    font-weight: ${fontWeight.small};
+  }
+  /* Emojis */
+  div {
+    margin: ${space.small} 0;
+    display: flex;
+    justify-content: space-between;
+
+    input {
+      display: none;
+    }
+    input[type="radio"]:checked + label {
+      background-color: ${(props) => props.theme.pointColor};
+    }
+    label {
+      cursor: pointer;
+      font-size: ${fontSize.title};
+      /* margin-right: ${space.middle}; */
+      padding: ${space.micro};
+      border-radius: ${borderRadius.small};
+      border: 2px solid ${(props) => props.theme.pointColor};
+    }
+  }
+`;
 
 // Interface
 interface IForm {
@@ -49,11 +87,11 @@ function CreateDiary() {
   // Send data to the Store
   const onSubmit = (data: IForm) => {
     const date = data.date.slice(0, 10);
-    const time = data.date.slice(11);
+
     const obj = {
       title: data.title,
       date,
-      time,
+      time: data.date,
       id,
       emoji: data.emoji,
       memo: data.memo,
@@ -61,13 +99,13 @@ function CreateDiary() {
     dispatch({ type: isEdit ? EDIT_DIARY : ADD_DIARY, data: obj });
     reset();
 
-    isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+    isEdit ? navigation(`/${editData.date}`) : navigation("/");
     setIsEdit(false);
   };
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+      isEdit ? navigation(`/${editData.date}`) : navigation("/");
     }
   };
 
@@ -102,22 +140,57 @@ function CreateDiary() {
             />
             <p>{errors?.title?.message}</p>
           </li>
-          <li>
-            <input
-              {...register("emoji")}
-              value="emoji_1"
-              id="emoji_1"
-              type="radio"
-            />
-            <label htmlFor="emoji_1">image</label>
-            <input
-              {...register("emoji")}
-              value="emoji_2"
-              id="emoji_2"
-              type="radio"
-            />
-            <label htmlFor="emoji_2">image</label>
-          </li>
+          <EmojiBox>
+            <span>이모티콘 : </span>
+            <div>
+              <input
+                {...register("emoji")}
+                value="emoji_1"
+                id="emoji_1"
+                type="radio"
+                defaultChecked
+              />
+              <label htmlFor="emoji_1">
+                <FontAwesomeIcon icon={faFaceSmile} />
+              </label>
+              <input
+                {...register("emoji")}
+                value="emoji_2"
+                id="emoji_2"
+                type="radio"
+              />
+              <label htmlFor="emoji_2">
+                <FontAwesomeIcon icon={faFaceGrin} />
+              </label>
+              <input
+                {...register("emoji")}
+                value="emoji_3"
+                id="emoji_3"
+                type="radio"
+              />
+              <label htmlFor="emoji_3">
+                <FontAwesomeIcon icon={faFaceMeh} />
+              </label>
+              <input
+                {...register("emoji")}
+                value="emoji_4"
+                id="emoji_4"
+                type="radio"
+              />
+              <label htmlFor="emoji_4">
+                <FontAwesomeIcon icon={faFaceFrown} />
+              </label>
+              <input
+                {...register("emoji")}
+                value="emoji_5"
+                id="emoji_5"
+                type="radio"
+              />
+              <label htmlFor="emoji_5">
+                <FontAwesomeIcon icon={faFaceAngry} />
+              </label>
+            </div>
+          </EmojiBox>
           <li>
             <label htmlFor="memo">메모 : </label>
             <textarea {...register("memo")} id="memo" />

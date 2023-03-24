@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { IState } from "../store";
 import { useNavigate } from "react-router-dom";
-import { dayOfWeek, today } from "../util/day";
+import { day, today } from "../util/day";
 import {
   borderRadius,
   colorSet,
@@ -12,23 +12,37 @@ import {
   space,
 } from "../style-root";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCommentDots, faSquare } from "@fortawesome/free-regular-svg-icons";
+import { faSquare } from "@fortawesome/free-regular-svg-icons";
+import dayjs from "dayjs";
 
 // Style
 const Card = styled.section`
   background-color: ${(props) => props.theme.weekColor.week_2};
-  padding: 15px;
+  padding: ${space.basic};
   height: 250px;
   width: 75%;
   margin: auto;
+  margin-top: ${space.basic};
   border-radius: ${borderRadius.large};
   cursor: pointer;
 `;
 
 const DateBox = styled.div`
+  text-align: center;
   margin-bottom: ${space.basic};
+  font-size: 17px;
+  font-weight: ${fontWeight.small};
+  padding: 0 ${space.micro};
+  position: relative;
+
   h2 {
     display: inline-block;
+    margin-right: ${space.small};
+    margin-top: ${space.micro};
+  }
+  i {
+    position: absolute;
+    right: 0;
   }
 `;
 
@@ -37,13 +51,21 @@ const Content = styled.div`
   padding: ${space.middle};
   border-radius: ${borderRadius.small};
   cursor: pointer;
-  height: auto;
+  height: 82%;
+
+  /* hide scrollbar */
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   /* All headers */
   b {
     font-weight: ${fontWeight.small};
   }
 `;
+
 const InfoBox = styled.div`
   position: relative;
   display: flex;
@@ -52,23 +74,36 @@ const InfoBox = styled.div`
 
   span {
     display: grid;
-    grid-template-columns: 23% 75%;
+    grid-template-columns: 35% 65%;
+    padding-bottom: ${space.micro};
+    border-bottom: 2px dashed ${colorSet.lightGray};
   }
 `;
+
 const ScheduleList = styled.div`
-  display: grid;
-  grid-template-columns: 23% 75%;
+  position: relative;
   margin-top: ${space.basic};
 
   b {
-    display: block;
+    position: absolute;
+    top: 0;
+    padding-bottom: ${space.micro};
   }
   ul {
     li {
       margin-bottom: ${space.micro};
+      padding-left: 35%;
+      padding-bottom: ${space.micro};
+      border-bottom: 2px dashed ${colorSet.lightGray};
+
       /* icon */
       svg {
         margin-right: ${space.micro};
+        font-size: ${fontSize.small};
+      }
+      /* time */
+      small {
+        font-weight: ${fontWeight.small};
         font-size: ${fontSize.small};
       }
     }
@@ -97,11 +132,11 @@ function TodayCard() {
   // Go to Detail page
   const onToDetail = () => navigation(`/${today}`);
   const onCreate = () => navigation("/new");
-
   return (
     <Card onClick={onToDetail}>
       <DateBox>
-        <h2>{today.slice(-2)}일</h2> <span>{dayOfWeek}</span>
+        <h2>{day.format("M월 D일 dddd")}</h2>
+        {todayDiary && <i>{todayDiary.emoji}</i>}
       </DateBox>
       {todayBudget || todayDiary || todaySchdule ? (
         <Content>
@@ -110,13 +145,10 @@ function TodayCard() {
               <b>총 지출 : </b>
               {totalAmount}원
             </span>
-            {todayDiary && (
-              <span>
-                <b>오늘의 기록 : </b>
-                {todayDiary.title}
-                <i>{todayDiary.emoji}</i>
-              </span>
-            )}
+            <span>
+              <b>오늘의 기록 : </b>
+              {todayDiary && <>{todayDiary.title}...</>}
+            </span>
           </InfoBox>
           <ScheduleList>
             <b>할일 : </b>
@@ -125,17 +157,15 @@ function TodayCard() {
                 todaySchdule.map((data) => (
                   <li key={data.id}>
                     <FontAwesomeIcon icon={faSquare} />
-                    {data.title}
+                    <small>{dayjs(data.startDate).format("A h시")} - </small>
+                    <span>{data.title}</span>
                   </li>
                 ))}
             </ul>
           </ScheduleList>
         </Content>
       ) : (
-        <>
-          <span>일정을 추가해주세요</span>
-          <button onClick={onCreate}>추가하기</button>
-        </>
+        <span style={{ margin: 5 }}>일정을 추가해주세요. 😊</span>
       )}
     </Card>
   );

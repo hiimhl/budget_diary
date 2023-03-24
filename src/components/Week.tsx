@@ -1,5 +1,5 @@
 // Weekly Calendar
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -34,8 +34,8 @@ config.autoAddCss = false;
 // Style
 const WeekWrapper = styled.div`
   width: 85%;
-  margin: 40px auto;
-  padding: 20px;
+  margin: ${space.xlarge} auto;
+  padding: ${space.middle};
 
   ul {
     width: 95%;
@@ -59,7 +59,7 @@ const Box = styled.div`
     display: inline-block;
     font-size: ${fontSize.large};
     span {
-      margin: 0 15px;
+      margin: 0 ${space.basic};
       font-weight: ${fontWeight.small};
     }
     button {
@@ -130,7 +130,8 @@ const TodayDate = styled.div`
     font-weight: ${fontWeight.small};
     letter-spacing: 0.5px;
     font-size: ${fontSize.basic};
-    margin-right: 15px;
+    margin-right: ${space.basic};
+    margin-left: ${space.small};
   }
   /* day */
   small {
@@ -139,7 +140,7 @@ const TodayDate = styled.div`
   /* Today Icon - book mark*/
   i {
     position: absolute;
-    left: -${space.mark};
+    left: -${space.small};
     top: 0;
     font-size: ${fontSize.basic};
     color: red;
@@ -195,7 +196,7 @@ function Week() {
   const scheduleData = useSelector((state: IState) => state.data.schedule);
 
   const navigation = useNavigate();
-  const getMonth = weekData.format("MM").replace("0", "");
+  const getMonth = weekData.format("M");
 
   // Get Next and Previous weeks
   const onNextWeeks = () => {
@@ -242,7 +243,7 @@ function Week() {
           {scheduleData[list].map((data) => (
             <li key={data.id}>
               <FontAwesomeIcon icon={faSquareCheck} />
-              <span>{data.startDate?.slice(-5, -3).replace("0", "")}시 - </span>
+              <span>{dayjs(data.startDate).format("H시")} - </span>
               {data.title.slice(0, 6)}
             </li>
           ))}

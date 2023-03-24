@@ -72,14 +72,14 @@ function CreateSchedule() {
       dispatch({ type: isEdit ? EDIT_SCHEDULE : ADD_SCHEDULE, data: obj });
       reset();
 
-      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+      isEdit ? navigation(`/${editData.date}`) : navigation("/");
       setIsEdit(false);
     }
   };
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {
-      isEdit ? navigation(`/detail/${editData.date}`) : navigation("/");
+      isEdit ? navigation(`/${editData.date}`) : navigation("/");
     }
   };
 

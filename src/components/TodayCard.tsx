@@ -77,6 +77,11 @@ const InfoBox = styled.div`
     grid-template-columns: 35% 65%;
     padding-bottom: ${space.micro};
     border-bottom: 2px dashed ${colorSet.lightGray};
+
+    div {
+      text-align: end;
+      margin-right: ${space.basic};
+    }
   }
 `;
 
@@ -92,7 +97,7 @@ const ScheduleList = styled.div`
   ul {
     li {
       margin-bottom: ${space.micro};
-      padding-left: 35%;
+      padding-left: 20%;
       padding-bottom: ${space.micro};
       border-bottom: 2px dashed ${colorSet.lightGray};
 
@@ -131,7 +136,6 @@ function TodayCard() {
 
   // Go to Detail page
   const onToDetail = () => navigation(`/${today}`);
-  const onCreate = () => navigation("/new");
   return (
     <Card onClick={onToDetail}>
       <DateBox>
@@ -143,11 +147,11 @@ function TodayCard() {
           <InfoBox>
             <span>
               <b>총 지출 : </b>
-              {totalAmount}원
+              <div>{totalAmount}원</div>
             </span>
             <span>
               <b>오늘의 기록 : </b>
-              {todayDiary && <>{todayDiary.title}...</>}
+              <div>{todayDiary && <>{todayDiary.title}...</>}</div>
             </span>
           </InfoBox>
           <ScheduleList>
@@ -157,7 +161,7 @@ function TodayCard() {
                 todaySchdule.map((data) => (
                   <li key={data.id}>
                     <FontAwesomeIcon icon={faSquare} />
-                    <small>{dayjs(data.startDate).format("A h시")} - </small>
+                    <small>{dayjs(data.time).format("H시")} - </small>
                     <span>{data.title}</span>
                   </li>
                 ))}

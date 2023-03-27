@@ -119,8 +119,8 @@ function DateList({ data, type }: any) {
             </GoDetailIcon>
           </Todo>
           <p>
-            {dayjs(data.startDate).format("A h:mm")}
-            {data.startDate === data.endDate
+            {dayjs(data.time).format("A h:mm")}
+            {data.time === data.endDate
               ? ""
               : " ~ " + dayjs(data.endDate).format("M월 D일 A h:mm")}
           </p>

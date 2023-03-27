@@ -6,7 +6,6 @@ import DetailItem from "./UI/DetailItem";
 
 function DetailPage() {
   const { date: pageDate, id, type } = useParams();
-
   const diary = useSelector((state: IState) => state.data.diary[pageDate!]);
 
   const budgetBook = useSelector((state: IState) =>

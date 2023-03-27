@@ -48,9 +48,8 @@ function CreateSchedule() {
   // 수정할 데이터를 Form안에 넣음
   useEffect(() => {
     if (editData) {
-      console.log(editData);
       setIsEdit(true);
-      setValue("date", editData.startDate);
+      setValue("date", editData.time);
       setValue("endDate", editData.endDate);
       setValue("title", editData.title);
       setValue("memo", editData.memo);
@@ -64,7 +63,7 @@ function CreateSchedule() {
       const obj = {
         title: data.title,
         date,
-        startDate: data.date,
+        time: data.date,
         endDate: data.endDate,
         id: isEdit ? editData.id : id,
         memo: data.memo,

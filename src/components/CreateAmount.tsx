@@ -197,8 +197,7 @@ function CreateAmount() {
   useEffect(() => {
     if (editData) {
       setIsEdit(true);
-      const dateTime = editData.date + "T" + editData.time;
-      setValue("date", dateTime);
+      setValue("date", editData.time);
       setValue("amount", editData.amount);
       setValue("title", editData.title);
       setValue("category", editData.category);

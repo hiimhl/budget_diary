@@ -6,6 +6,8 @@ import { setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
+
+// Icon
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceAngry,
@@ -75,9 +77,7 @@ function CreateDiary() {
   useEffect(() => {
     if (editData) {
       setIsEdit(true);
-      console.log(editData);
-      const dateTime = editData.date + "T" + editData.time;
-      setValue("date", dateTime);
+      setValue("date", editData.time);
       setValue("title", editData.title);
       setValue("emoji", editData.emoji);
       setValue("memo", editData.memo);

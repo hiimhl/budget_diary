@@ -243,7 +243,7 @@ function Week() {
           {scheduleData[list].map((data) => (
             <li key={data.id}>
               <FontAwesomeIcon icon={faSquareCheck} />
-              <span>{dayjs(data.startDate).format("H시")} - </span>
+              <span>{dayjs(data.time).format("H시")} - </span>
               {data.title.slice(0, 6)}
             </li>
           ))}

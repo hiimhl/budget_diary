@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -5,11 +6,21 @@ import styled from "styled-components";
 import DateList from "./UI/DateList";
 import Header from "./Header";
 import { IState } from "../store";
-import { borderRadius, fontSize, fontWeight, space } from "../style-root";
+import {
+  borderRadius,
+  colorSet,
+  fontSize,
+  fontWeight,
+  space,
+} from "../style-root";
 import { Wrapper } from "../routes/Home";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Style
 const Content = styled.div`
@@ -25,12 +36,20 @@ const Card = styled.section`
   width: 85%;
   height: auto;
   border-radius: ${borderRadius.large};
-
+  position: relative;
   h3 {
     font-size: ${fontSize.large};
     font-weight: ${fontWeight.small};
     margin-bottom: ${space.basic};
   }
+`;
+
+const PlusBtn = styled.button`
+  position: absolute;
+  right: ${space.small};
+  top: ${space.basic};
+  color: ${colorSet.darkGray};
+  font-size: ${fontSize.basic};
 `;
 
 // Component
@@ -39,6 +58,7 @@ function DatePage() {
   const navigation = useNavigate();
 
   const pageDate = dayjs(date).format("M월 D일");
+  const addPageDate = { time: date + "T09:00" };
 
   // Get data
   const data = useSelector((state: IState) => state.data);
@@ -56,6 +76,9 @@ function DatePage() {
 
   const onPrevDay = () => navigation(`/${prevDay}`);
   const onNextDay = () => navigation(`/${nextDay}`);
+
+  const onAddData = (type: string) =>
+    navigation(`/new/${type}`, { state: addPageDate });
 
   return (
     <Wrapper>
@@ -75,6 +98,9 @@ function DatePage() {
       <Content>
         <Card>
           <h3>할일 목록</h3>
+          <PlusBtn onClick={() => onAddData("schedule")}>
+            <FontAwesomeIcon icon={faPlus} />
+          </PlusBtn>
           <ul>
             {schedule &&
               schedule.map((list) => (
@@ -84,6 +110,9 @@ function DatePage() {
         </Card>
         <Card>
           <h3>가계부</h3>
+          <PlusBtn onClick={() => onAddData("")}>
+            <FontAwesomeIcon icon={faPlus} />
+          </PlusBtn>
           <ul>
             {budgetBook &&
               budgetBook.map((list) => (
@@ -93,7 +122,13 @@ function DatePage() {
         </Card>
         <Card>
           <h3>일기</h3>
-          {diary && <DateList key={diary.id} data={diary} type={"diary"} />}
+          {diary ? (
+            <DateList key={diary.id} data={diary} type={"diary"} />
+          ) : (
+            <PlusBtn onClick={() => onAddData("diary")}>
+              <FontAwesomeIcon icon={faPlus} />
+            </PlusBtn>
+          )}
         </Card>
       </Content>
     </Wrapper>

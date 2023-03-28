@@ -76,7 +76,10 @@ export const FormCard = styled.section`
     border-radius: ${borderRadius.micro};
     border: 2px solid ${colorSet.lightGray};
     padding: ${space.micro};
-    height: 100px;
+    height: 25vh;
+    max-height: 300px;
+    width: 100%;
+    resize: none;
   }
 
   /* Error Message */
@@ -212,7 +215,7 @@ function CreateAmount() {
 
     // Make amount Positive or Negative
     const amountToNumber = parseInt(data.amount);
-    const amount = isPositive ? amountToNumber : -amountToNumber;
+    const amount = isPositive ? amountToNumber : amountToNumber * -1;
 
     const obj = {
       title: data.title,
@@ -298,9 +301,11 @@ function CreateAmount() {
           <li>
             <label htmlFor="category">카테고리 </label>
             <select {...register("category", { required: true })} id="category">
-              <option value="eat">식비</option>
-              <option value="health">건강유지비</option>
-              <option value="study">교육비</option>
+              <option value="식비">식비</option>
+              <option value="교통비">교통비</option>
+              <option value="건강유지비">건강유지비</option>
+              <option value="교육비">교육비</option>
+              <option value="미용">미용</option>
             </select>
           </li>
           <li>
@@ -310,8 +315,9 @@ function CreateAmount() {
               name="pay"
               id="pay"
             >
-              <option value="credit">신용카드</option>
-              <option value="cash">현금</option>
+              <option value="신용카드">신용카드</option>
+              <option value="현금">현금</option>
+              <option value="체크카드">체크카드</option>
             </select>
           </li>
           <li>

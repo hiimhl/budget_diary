@@ -7,17 +7,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { FormCard, MyInput, VerticalLine } from "./CreateAmount";
 
-// Icon
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFaceAngry,
-  faFaceFrown,
-  faFaceGrin,
-  faFaceMeh,
-  faFaceSmile,
-} from "@fortawesome/free-regular-svg-icons";
 import styled from "styled-components";
 import { borderRadius, font, fontSize, fontWeight, space } from "../style-root";
+import { emojis, imageUrl } from "../util/image";
 
 // Style
 const EmojiBox = styled.li`
@@ -35,6 +27,10 @@ const EmojiBox = styled.li`
     }
     input[type="radio"]:checked + label {
       background-color: ${(props) => props.theme.pointColor};
+      img {
+        filter: invert(100%) sepia(66%) saturate(522%) hue-rotate(200deg)
+          brightness(116%) contrast(100%);
+      }
     }
     label {
       cursor: pointer;
@@ -43,6 +39,10 @@ const EmojiBox = styled.li`
       padding: ${space.micro};
       border-radius: ${borderRadius.small};
       border: 2px solid ${(props) => props.theme.pointColor};
+    }
+    /* emoji */
+    img {
+      width: 40px;
     }
   }
 `;
@@ -75,6 +75,9 @@ function CreateDiary() {
   const editData = location.state;
 
   useEffect(() => {
+    // set default value
+    setValue("emoji", "emoji_1");
+
     if (editData) {
       setIsEdit(true);
       setValue("date", editData.time);
@@ -143,52 +146,19 @@ function CreateDiary() {
           <EmojiBox>
             <span>이모티콘 : </span>
             <div>
-              <input
-                {...register("emoji")}
-                value="emoji_1"
-                id="emoji_1"
-                type="radio"
-                defaultChecked
-              />
-              <label htmlFor="emoji_1">
-                <FontAwesomeIcon icon={faFaceSmile} />
-              </label>
-              <input
-                {...register("emoji")}
-                value="emoji_2"
-                id="emoji_2"
-                type="radio"
-              />
-              <label htmlFor="emoji_2">
-                <FontAwesomeIcon icon={faFaceGrin} />
-              </label>
-              <input
-                {...register("emoji")}
-                value="emoji_3"
-                id="emoji_3"
-                type="radio"
-              />
-              <label htmlFor="emoji_3">
-                <FontAwesomeIcon icon={faFaceMeh} />
-              </label>
-              <input
-                {...register("emoji")}
-                value="emoji_4"
-                id="emoji_4"
-                type="radio"
-              />
-              <label htmlFor="emoji_4">
-                <FontAwesomeIcon icon={faFaceFrown} />
-              </label>
-              <input
-                {...register("emoji")}
-                value="emoji_5"
-                id="emoji_5"
-                type="radio"
-              />
-              <label htmlFor="emoji_5">
-                <FontAwesomeIcon icon={faFaceAngry} />
-              </label>
+              {emojis.map((emoji) => (
+                <>
+                  <input
+                    {...register("emoji")}
+                    value={emoji}
+                    id={emoji}
+                    type="radio"
+                  />
+                  <label htmlFor={emoji}>
+                    <img src={`${imageUrl}${emoji}.svg`} alt="emoji" />
+                  </label>
+                </>
+              ))}
             </div>
           </EmojiBox>
           <li>

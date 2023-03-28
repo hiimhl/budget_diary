@@ -1,10 +1,11 @@
+// Render All data list for the date
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import DateList from "./UI/DateList";
-import Header from "./Header";
+import Header, { LeftRightBtn } from "./Header";
 import { IState } from "../store";
 import {
   borderRadius,
@@ -58,7 +59,7 @@ function DatePage() {
   const navigation = useNavigate();
 
   const pageDate = dayjs(date).format("M월 D일");
-  const addPageDate = { time: date + "T09:00" };
+  const addPageDate = { time: date + "T09:00" }; // send Date data only
 
   // Get data
   const data = useSelector((state: IState) => state.data);
@@ -84,15 +85,15 @@ function DatePage() {
     <Wrapper>
       <Header
         leftBtn={
-          <button onClick={onPrevDay}>
-            <FontAwesomeIcon icon={faAngleLeft} className="leftRightBtn" />
-          </button>
+          <LeftRightBtn onClick={onPrevDay}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </LeftRightBtn>
         }
         middleBtn={`${pageDate} 기록`}
         rightBtn={
-          <button onClick={onNextDay}>
-            <FontAwesomeIcon icon={faAngleRight} className="leftRightBtn" />
-          </button>
+          <LeftRightBtn onClick={onNextDay}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </LeftRightBtn>
         }
       />
       <Content>

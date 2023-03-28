@@ -44,11 +44,13 @@ const Children = styled.div`
     font-weight: ${fontWeight.title};
     font-size: ${fontSize.basic};
   }
+`;
 
-  /* Previous and Next button */
-  .leftRightBtn {
-    color: ${colorSet.darkGray};
-    font-size: ${fontSize.large};
+/* Previous and Next button */
+export const LeftRightBtn = styled.button`
+  color: ${colorSet.gray};
+  svg {
+    font-size: ${fontSize.week};
   }
 `;
 

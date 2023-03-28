@@ -137,18 +137,12 @@ const TodayDate = styled.div`
   small {
     font-size: ${fontSize.micro};
   }
-  /* Today Icon - book mark*/
-  i {
-    position: absolute;
-    left: -${space.small};
-    top: 0;
-    font-size: ${fontSize.basic};
-    color: red;
-    box-shadow: ${boxShadow.small};
-  }
 `;
+
 const TodayContent = styled.div<{ isPositive: number }>`
   position: relative;
+  width: 100%;
+  height: 100%;
 
   /* Total amount */
   .total {
@@ -177,14 +171,24 @@ const TodayContent = styled.div<{ isPositive: number }>`
       }
     }
   }
+`;
 
-  /* Note - Diary */
-  .note {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: ${fontSize.large};
-  }
+const TodayIcon = styled.div`
+  position: absolute;
+  left: -${space.small};
+  top: 50%;
+  transform: translate(0, -50%);
+  background-color: red;
+  width: ${space.small};
+  height: ${space.small};
+  border-radius: 50%;
+`;
+
+const Note = styled.i`
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: ${fontSize.large};
 `;
 
 function Week() {
@@ -222,20 +226,12 @@ function Week() {
     // Get data
     const isToday = list === today ? "today" : "";
     const isDiary = diaryData[list] ? (
-      <i>
-        <FontAwesomeIcon className="note" icon={faCommentDots} />
-      </i>
+      <Note>
+        <FontAwesomeIcon icon={faCommentDots} />
+      </Note>
     ) : (
       ""
     );
-    const todayIcon =
-      list === today ? (
-        <i>
-          <FontAwesomeIcon icon={faBookmark} className="today_icon" />
-        </i>
-      ) : (
-        ""
-      );
 
     const isSchedule = //
       scheduleData[list] ? (
@@ -264,7 +260,7 @@ function Week() {
         <TodayDate>
           <b>{day}</b>
           <small>{list.slice(-2)}일</small>
-          {todayIcon}
+          {list === today && <TodayIcon />}
         </TodayDate>
         <TodayContent isPositive={isPositive}>
           {total === 0 ? "" : <span className="total">{total}원 </span>}

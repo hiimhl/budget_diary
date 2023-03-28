@@ -14,6 +14,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquare } from "@fortawesome/free-regular-svg-icons";
 import dayjs from "dayjs";
+import { imageUrl } from "../util/image";
 
 // Style
 const Card = styled.section`
@@ -39,10 +40,6 @@ const DateBox = styled.div`
     display: inline-block;
     margin-right: ${space.small};
     margin-top: ${space.micro};
-  }
-  i {
-    position: absolute;
-    right: 0;
   }
 `;
 
@@ -101,18 +98,25 @@ const ScheduleList = styled.div`
       padding-bottom: ${space.micro};
       border-bottom: 2px dashed ${colorSet.lightGray};
 
-      /* icon */
-      svg {
-        margin-right: ${space.micro};
-        font-size: ${fontSize.small};
-      }
       /* time */
       small {
         font-weight: ${fontWeight.small};
         font-size: ${fontSize.small};
       }
+
+      i {
+        margin-right: ${space.micro};
+        font-size: ${fontSize.small};
+      }
     }
   }
+`;
+
+const Img = styled.img`
+  width: ${space.emoji};
+  background-color: ${colorSet.emoji};
+  border-radius: 50%;
+  transform: translate(0, 5px);
 `;
 
 // Component
@@ -127,8 +131,8 @@ function TodayCard() {
   // Set today's total amount
   let totalAmount = 0;
   if (todayBudget && todayBudget.length > 1) {
-    totalAmount = todayBudget.reduce((prev: any, current: any) => {
-      return prev + current.amount;
+    totalAmount = todayBudget.reduce((prev, current) => {
+      return prev + current.amount!;
     }, 0);
   } else if (todayBudget && todayBudget.length === 1) {
     totalAmount = todayBudget[0].amount!;
@@ -140,7 +144,9 @@ function TodayCard() {
     <Card onClick={onToDetail}>
       <DateBox>
         <h2>{day.format("M월 D일 dddd")}</h2>
-        {todayDiary && <i>{todayDiary.emoji}</i>}
+        {todayDiary && (
+          <Img alt="emoji" src={`${imageUrl}${todayDiary.emoji}.svg`} />
+        )}
       </DateBox>
       {todayBudget || todayDiary || todaySchdule ? (
         <Content>
@@ -161,7 +167,7 @@ function TodayCard() {
                 todaySchdule.map((data) => (
                   <li key={data.id}>
                     <FontAwesomeIcon icon={faSquare} />
-                    <small>{dayjs(data.time).format("H시")} - </small>
+                    <small> {dayjs(data.time).format("H시")} - </small>
                     <span>{data.title}</span>
                   </li>
                 ))}
@@ -169,7 +175,7 @@ function TodayCard() {
           </ScheduleList>
         </Content>
       ) : (
-        <span style={{ margin: 5 }}>일정을 추가해주세요. 😊</span>
+        <span style={{ margin: 5 }}>일정을 추가해주세요.😊</span>
       )}
     </Card>
   );

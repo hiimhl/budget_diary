@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
+import Month from "../components/Month";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
 import { IState } from "../store";
@@ -29,7 +30,7 @@ const DetailCard = styled.div`
 `;
 
 function Home() {
-  const [add, setAdd] = useState(false);
+  const [isToday, setIsToday] = useState(true);
 
   const dayList = getWeekList(day);
   const navigation = useNavigate();
@@ -37,17 +38,25 @@ function Home() {
   const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const DiaryData = useSelector((state: any) => state.diary);
   const onCreate = () => navigation("/new");
+  const onIsToday = () => setIsToday(false);
+  const onIsMonth = () => setIsToday(true);
 
   return (
     <Wrapper>
       <Header
-        leftBtn={"Today"}
+        leftBtn={<button onClick={onIsToday}>Today</button>}
         middleBtn={<button onClick={onCreate}>추가하기</button>}
-        rightBtn={"Month"}
+        rightBtn={<button onClick={onIsMonth}>Month</button>}
       />
       <DetailCard>
-        <TodayCard />
-        <Week />
+        {isToday ? (
+          <Month />
+        ) : (
+          <>
+            <TodayCard />
+            <Week />
+          </>
+        )}
       </DetailCard>
     </Wrapper>
   );

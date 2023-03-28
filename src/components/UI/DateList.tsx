@@ -1,17 +1,6 @@
-import {
-  faNoteSticky,
-  faSquare,
-  faSquareCheck,
-} from "@fortawesome/free-regular-svg-icons";
-import {
-  faArrowUpRightFromSquare,
-  faMinus,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
@@ -21,6 +10,16 @@ import {
   fontWeight,
   space,
 } from "../../style-root";
+
+// Icon
+import { faSquare, faSquareCheck } from "@fortawesome/free-regular-svg-icons";
+import {
+  faArrowUpRightFromSquare,
+  faMinus,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
+import { IData } from "../../store";
+import { imageUrl } from "../../util/image";
 
 // Style
 const Card = styled.li`
@@ -70,19 +69,25 @@ const GoDetailIcon = styled.i`
 const DiaryContent = styled.div`
   cursor: pointer;
   position: relative;
-
+  max-height: 300px;
   span {
     color: ${colorSet.gray};
     font-size: ${fontSize.small};
   }
   p {
+    width: 95%;
     margin: ${space.micro};
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.2;
   }
 `;
 
-const Emoji = styled.i`
+const Emoji = styled.img`
   position: absolute;
+  top: -${space.micro};
   right: 0;
+  width: ${space.emoji};
 `;
 
 const BudgetContent = styled(DiaryContent)`
@@ -96,8 +101,13 @@ const BudgetContent = styled(DiaryContent)`
   }
 `;
 
+interface IPops {
+  data: IData;
+  type: string;
+}
+
 // Component
-function DateList({ data, type }: any) {
+function DateList({ data, type }: IPops) {
   const navigation = useNavigate();
 
   const [isClicked, setIsClicked] = useState(false);
@@ -129,7 +139,7 @@ function DateList({ data, type }: any) {
       {type === "budget" && (
         <BudgetContent onClick={() => onGoDetail("budgetBook")}>
           <i>
-            <FontAwesomeIcon icon={data.amount > 0 ? faPlus : faMinus} />
+            <FontAwesomeIcon icon={data.amount! > 0 ? faPlus : faMinus} />
           </i>
           <div>
             <h5>{data.title}</h5>
@@ -146,8 +156,8 @@ function DateList({ data, type }: any) {
       {type === "diary" && (
         <DiaryContent onClick={() => onGoDetail("diary")}>
           <h5>{data.title}</h5>
-          <Emoji>{data.emoji}</Emoji>
-          <p>{data.memo.slice(30)}...</p>
+          <Emoji src={`${imageUrl}${data.emoji}.svg`} alt="emoji" />
+          <p>{data.memo.slice(0, 220)}...</p>
           <span>{dayjs(data.time).format("A H:mm")}</span>
         </DiaryContent>
       )}

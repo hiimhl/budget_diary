@@ -1,3 +1,4 @@
+// Render the detail data for the item
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
@@ -8,6 +9,8 @@ import {
   REMOVE_DIARY,
   REMOVE_SCHEDULE,
 } from "../../store";
+import Header, { LeftRightBtn } from "../Header";
+import dayjs from "dayjs";
 import {
   borderRadius,
   colorSet,
@@ -16,15 +19,17 @@ import {
   fontWeight,
   space,
 } from "../../style-root";
-import Header from "../Header";
-import dayjs from "dayjs";
 import { VerticalLine } from "../CreateAmount";
+// Icon
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
+import { imageUrl } from "../../util/image";
 
 // Style
 const Card = styled.section`
   width: 80%;
   height: 70vh;
-  background-color: ${(props) => props.theme.weekColor.week_0};
+  background-color: ${(props) => props.theme.weekColor.week_1};
   margin: auto;
   margin-top: ${space.middle};
   padding: ${space.middle};
@@ -49,12 +54,45 @@ const Card = styled.section`
 
 const List = styled.li`
   display: grid;
-  grid-template-columns: 30% 70%;
-  padding: ${space.small};
-  margin-bottom: 15px;
+  grid-template-columns: 27% 73%;
+  padding: ${space.small} 0;
+  margin-bottom: ${space.basic};
   border-bottom: 1px solid ${colorSet.lightGray};
+  align-items: center;
+
   &:last-child {
     border: none;
+  }
+
+  h3 {
+    text-align: center;
+    font-weight: ${fontWeight.small};
+  }
+  p {
+    margin-left: ${space.basic};
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.3;
+
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+`;
+
+const Emoji = styled.div`
+  background-color: ${colorSet.emoji};
+  border-radius: 50%;
+  width: ${space.mark};
+  height: ${space.mark};
+  margin-left: ${space.basic};
+
+  img {
+    width: ${space.mark};
+    filter: invert(47%) sepia(7%) saturate(0%) hue-rotate(192deg)
+      brightness(94%) contrast(89%);
   }
 `;
 
@@ -84,13 +122,17 @@ function DetailItem({ data, type }: IProps) {
 
   // Put data into Object to be Rendered
   useEffect(() => {
-    const lastDay =
-      data.endDate && dayjs(data.endDate).format("YYYY년 M월 D일 A h시 mm분");
     if (data) {
+      const lastDay = //
+        data.endDate && dayjs(data.endDate).format("YYYY년 M월 D일 A h:mm");
+      const amountKey = data.amount! > 0 ? "수입금" : "지출금";
+      const positiveAndLocalize =
+        Math.abs(data.amount!).toLocaleString("ko-KR") + "원";
+
       setPageData({
-        날짜: dayjs(data.time).format("YYYY년 M월 D일 A h시 mm분"),
+        날짜: dayjs(data.time).format("YYYY년 M월 D일 A h:mm"),
         마지막날: lastDay,
-        출입금: data.amount,
+        [amountKey]: data.amount && positiveAndLocalize,
         카테고리: data.category,
         지불수단: data.pay,
         내용: data.memo,
@@ -128,7 +170,11 @@ function DetailItem({ data, type }: IProps) {
       {data ? (
         <>
           <Header
-            leftBtn={<button onClick={onGoDetailList}>돌아가기</button>}
+            leftBtn={
+              <LeftRightBtn onClick={onGoDetailList}>
+                <FontAwesomeIcon icon={faAngleLeft} />
+              </LeftRightBtn>
+            }
             middleBtn={<button onClick={() => onEdit(data)}>수정</button>}
             rightBtn={<button onClick={() => onRemove(data)}>삭제</button>}
           />
@@ -136,12 +182,21 @@ function DetailItem({ data, type }: IProps) {
             <h2>{data.title}</h2>
             <ul>
               <VerticalLine as={"li"} />
+              {data.emoji && (
+                <List>
+                  <h3>오늘의 기분</h3>
+                  <Emoji>
+                    <img src={`${imageUrl}${data.emoji}.svg`} />
+                  </Emoji>
+                </List>
+              )}
               {pageData &&
                 Object.entries(pageData)
-                  .filter(([_, value]) => value !== undefined)
+                  .filter(([_, value]) => value !== undefined) // _ = not used
                   .map(([objetKey, value]) => (
                     <List key={objetKey}>
-                      <h3>{objetKey}</h3> <p>{String(value)}</p>
+                      <h3>{objetKey}</h3>
+                      <p>{String(value)}</p>
                     </List>
                   ))}
             </ul>

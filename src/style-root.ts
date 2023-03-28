@@ -5,6 +5,7 @@ export const space = {
   small: "10px",
   basic: "15px",
   middle: "20px",
+  emoji: "23px",
   large: "30px",
   xlarge: "40px",
   mark: "45px",
@@ -51,4 +52,5 @@ export const colorSet = {
   darkGray: "#5D5D5D",
   positive: "#00206A",
   nevative: "#970027",
+  emoji: " #fff848",
 };

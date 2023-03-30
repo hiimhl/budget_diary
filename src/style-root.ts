@@ -48,6 +48,7 @@ export const colorSet = {
   red: "#E6002B",
   blue: "#1670F0",
   lightGray: "#B6B6B6",
+  veryLightGray: "#efefef",
   gray: "#747474",
   darkGray: "#5D5D5D",
   positive: "#00206A",

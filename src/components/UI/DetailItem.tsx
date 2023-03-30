@@ -69,7 +69,7 @@ const List = styled.li`
     font-weight: ${fontWeight.small};
   }
   p {
-    margin-left: ${space.basic};
+    margin-left: ${space.large};
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.3;
@@ -87,7 +87,7 @@ const Emoji = styled.div`
   border-radius: 50%;
   width: ${space.mark};
   height: ${space.mark};
-  margin-left: ${space.basic};
+  margin-left: ${space.large};
 
   img {
     width: ${space.mark};

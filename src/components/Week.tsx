@@ -41,6 +41,7 @@ const WeekWrapper = styled.div`
     width: 95%;
     margin: auto;
   }
+  z-index: 10;
 `;
 
 const Box = styled.div`
@@ -240,7 +241,7 @@ function Week() {
             <li key={data.id}>
               <FontAwesomeIcon icon={faSquareCheck} />
               <span>{dayjs(data.time).format("H시")} - </span>
-              {data.title.slice(0, 6)}
+              {data.title!.slice(0, 6)}
             </li>
           ))}
         </ul>

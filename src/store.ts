@@ -2,6 +2,9 @@ import { legacy_createStore as createStore } from "redux";
 
 // Interface
 export interface IState {
+  user: {
+    theme: string;
+  };
   data: {
     budgetBook: {
       [key: string]: IData[];
@@ -17,9 +20,9 @@ export interface IState {
 
 export interface IData {
   id: string;
-  title: string;
-  date: string;
-  memo: string;
+  title?: string;
+  date?: string;
+  memo?: string;
   amount?: number; // BudgetBook
   category?: string; // BudgetBook
   pay?: string; // BudgetBook
@@ -27,6 +30,7 @@ export interface IData {
   emoji?: string; // Diary
   startDate?: string; // Schedule
   endDate?: string; // Schedule
+  theme?: string; // Theme
 }
 
 export const ADD_BUDGET = "ADD_BUDGET";
@@ -38,6 +42,7 @@ export const EDIT_SCHEDULE = "EDIT_SCHEDULE";
 export const REMOVE_BUDGET = "REMOVE_BUDGET";
 export const REMOVE_DIARY = "REMOVE_DIARY";
 export const REMOVE_SCHEDULE = "REMOVE_SCHEDULE";
+export const SET_THEME = "SET_THEME";
 
 type IType =
   | "ADD_BUDGET"
@@ -48,18 +53,22 @@ type IType =
   | "EDIT_SCHEDULE"
   | "REMOVE_BUDGET"
   | "REMOVE_DIARY"
-  | "REMOVE_SCHEDULE";
+  | "REMOVE_SCHEDULE"
+  | "SET_THEME";
 
 // State
 export const initialState: IState = {
+  user: {
+    theme: "",
+  },
   data: {
     budgetBook: {
-      "2023-03-28": [
+      "2023-03-30": [
         {
           id: "012",
           title: "편의점",
-          date: "2023-03-28",
-          time: "2023-03-28T12:00",
+          date: "2023-03-30",
+          time: "2023-03-30T12:00",
           memo: "과자 구매",
           amount: -1000,
           category: "식비",
@@ -68,8 +77,8 @@ export const initialState: IState = {
         {
           id: "015",
           title: "과자",
-          date: "2023-03-28",
-          time: "2023-03-28T16:00",
+          date: "2023-03-30",
+          time: "2023-03-30T16:00",
           memo: "과자 구매",
           amount: -1200,
           category: "식비",
@@ -78,29 +87,29 @@ export const initialState: IState = {
       ],
     },
     diary: {
-      "2023-03-28": {
+      "2023-03-30": {
         id: "012333333333",
-        title: "편의점가기",
-        date: "2023-03-28",
+        title: "산책을 갔다",
+        date: "2023-03-30",
         memo: "과자 구매",
-        time: "2023-03-28T09:00",
+        time: "2023-03-30T09:00",
         emoji: "emoji_1",
       },
     },
     schedule: {
-      "2023-03-28": [
+      "2023-03-30": [
         {
           id: "0123333",
           title: "편의점가기",
-          date: "2023-03-28",
+          date: "2023-03-30",
           memo: "과자 구매",
-          time: "2023-03-28T09:00",
-          endDate: "2023-03-28T09:00",
+          time: "2023-03-30T09:00",
+          endDate: "2023-03-30T09:00",
         },
         {
           id: "015444444",
           title: "과자사기",
-          date: "2023-03-28",
+          date: "2023-03-30",
           memo: "과자 구매",
           time: "2023-03-22T09:00",
           endDate: "2023-03-18T09:00",
@@ -119,10 +128,11 @@ export function reducer(
     case ADD_BUDGET:
       const { date } = action.data;
       return {
+        ...state,
         data: {
           budgetBook: {
             ...state.data.budgetBook,
-            [date]: [...(state.data.budgetBook[date] ?? []), action.data],
+            [date!]: [...(state.data.budgetBook[date!] ?? []), action.data],
           },
           diary: state.data.diary,
           schedule: state.data.schedule,
@@ -131,10 +141,11 @@ export function reducer(
 
     case ADD_DIARY:
       return {
+        ...state,
         data: {
           diary: {
             ...state.data.diary,
-            [action.data.date]: action.data,
+            [action.data.date!]: action.data,
           },
           budgetBook: state.data.budgetBook,
           schedule: state.data.schedule,
@@ -143,13 +154,14 @@ export function reducer(
 
     case ADD_SCHEDULE:
       return {
+        ...state,
         data: {
           budgetBook: state.data.budgetBook,
           diary: state.data.diary,
           schedule: {
             ...state.data.schedule,
-            [action.data.date]: [
-              ...(state.data.schedule[action.data.date] ?? []),
+            [action.data.date!]: [
+              ...(state.data.schedule[action.data.date!] ?? []),
               action.data,
             ],
           },
@@ -165,7 +177,7 @@ export function reducer(
           ...state.data,
           budgetBook: {
             ...state.data.budgetBook,
-            [date]: state.data.budgetBook[date].map((list) =>
+            [date!]: state.data.budgetBook[date!].map((list) =>
               list.id === id ? { ...action.data } : list
             ),
           },
@@ -181,7 +193,7 @@ export function reducer(
           ...state.data,
           diary: {
             ...state.data.diary,
-            [date]: action.data,
+            [date!]: action.data,
           },
         },
       };
@@ -196,7 +208,7 @@ export function reducer(
           ...state.data,
           schedule: {
             ...state.data.schedule,
-            [date]: state.data.schedule[date].map((list) =>
+            [date!]: state.data.schedule[date!].map((list) =>
               list.id === id ? { ...action.data } : list
             ),
           },
@@ -214,7 +226,7 @@ export function reducer(
         data: {
           ...state.data,
           budgetBook: {
-            [date]: state.data.budgetBook[date].filter(
+            [date!]: state.data.budgetBook[date!].filter(
               (list) => list.id !== id
             ),
           },
@@ -224,7 +236,7 @@ export function reducer(
 
     case REMOVE_DIARY: {
       const { date } = action.data;
-      const { [date]: toRemove, ...otherData } = state.data.diary;
+      const { [date!]: toRemove, ...otherData } = state.data.diary;
       // [date]의 key값을 toRemove라는 변수에 저장
 
       return {
@@ -243,8 +255,19 @@ export function reducer(
         data: {
           ...state.data,
           schedule: {
-            [date]: state.data.schedule[date].filter((list) => list.id !== id),
+            [date!]: state.data.schedule[date!].filter(
+              (list) => list.id !== id
+            ),
           },
+        },
+      };
+    }
+
+    case SET_THEME: {
+      return {
+        ...state,
+        user: {
+          theme: action.data.theme!,
         },
       };
     }

@@ -112,7 +112,7 @@ export const FormCard = styled.section`
     }
     .submit {
       background-color: ${(props) => props.theme.pointColor};
-      color: white;
+      color: ${colorSet.white};
     }
     .cancel {
       color: ${colorSet.gray};
@@ -122,7 +122,7 @@ export const FormCard = styled.section`
       border: 2px solid ${colorSet.red};
       background-color: ${colorSet.red};
       border: none;
-      color: white;
+      color: ${colorSet.white};
     }
   }
 `;

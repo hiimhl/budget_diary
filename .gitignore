@@ -24,7 +24,4 @@ yarn-error.log*
 dummyData.ts
 type.ts
 
-
-
-WeeklyCalendar.tsx
 Month.tsx

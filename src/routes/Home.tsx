@@ -38,6 +38,7 @@ function Home() {
   const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const DiaryData = useSelector((state: any) => state.diary);
   const onCreate = () => navigation("/new");
+
   const onIsToday = () => setIsToday(false);
   const onIsMonth = () => setIsToday(true);
 

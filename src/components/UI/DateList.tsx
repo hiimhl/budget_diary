@@ -157,7 +157,7 @@ function DateList({ data, type }: IPops) {
         <DiaryContent onClick={() => onGoDetail("diary")}>
           <h5>{data.title}</h5>
           <Emoji src={`${imageUrl}${data.emoji}.svg`} alt="emoji" />
-          <p>{data.memo.slice(0, 220)}...</p>
+          <p>{data.memo!.slice(0, 220)}...</p>
           <span>{dayjs(data.time).format("A H:mm")}</span>
         </DiaryContent>
       )}

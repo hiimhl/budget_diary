@@ -21,6 +21,7 @@ const EmojiBox = styled.li`
     margin: ${space.small} 0;
     display: flex;
     justify-content: space-between;
+    /* Input List */
 
     input {
       display: none;
@@ -147,7 +148,7 @@ function CreateDiary() {
             <span>이모티콘 : </span>
             <div>
               {emojis.map((emoji) => (
-                <>
+                <div key={emoji}>
                   <input
                     {...register("emoji")}
                     value={emoji}
@@ -157,7 +158,7 @@ function CreateDiary() {
                   <label htmlFor={emoji}>
                     <img src={`${imageUrl}${emoji}.svg`} alt="emoji" />
                   </label>
-                </>
+                </div>
               ))}
             </div>
           </EmojiBox>

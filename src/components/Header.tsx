@@ -1,11 +1,17 @@
-import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleDown,
+  faAngleUp,
+  faBars,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ReactNode, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { SET_THEME } from "../store";
+import { IState, SET_THEME } from "../store";
 import {
+  borderRadius,
   boxShadow,
   colorSet,
   font,
@@ -13,6 +19,8 @@ import {
   fontWeight,
   space,
 } from "../style-root";
+import { getAuthData, getDBStore, userInfo } from "../my-firebase";
+import { addDoc, collection, doc, getDoc } from "firebase/firestore";
 
 const Wrapper = styled.header`
   width: 650px;
@@ -57,9 +65,8 @@ const Children = styled.div`
   }
 `;
 
-const Menu = styled.aside<{ toggleMenu: boolean }>`
+const Menu = styled.aside`
   position: absolute;
-  display: ${(props) => (props.toggleMenu ? "block" : "none")};
   top: 5vh;
   right: 0;
   height: 95vh;
@@ -73,34 +80,68 @@ const Menu = styled.aside<{ toggleMenu: boolean }>`
 
   div {
     cursor: pointer;
-    padding: 5px;
-    margin: 10px;
-    margin-left: 20px;
+    padding: ${space.micro};
+    margin: ${space.small};
+    margin-left: ${space.middle};
+
+    /* Angle down, up Icon */
+    svg {
+      margin-left: ${space.xlarge};
+      font-size: ${fontSize.basic};
+      color: ${colorSet.gray};
+    }
   }
   div:hover {
     text-decoration: underline;
   }
 `;
 
-const Theme = styled.ul<{ isThemeClicked: boolean }>`
-  display: ${(props) => (props.isThemeClicked ? "block" : "none")};
-  background-color: ${colorSet.veryLightGray};
+const Theme = styled.ul`
   padding: 3px 0;
 
   li {
     font-size: ${fontSize.basic};
+    border-radius: ${borderRadius.small};
+    width: 50%;
     cursor: pointer;
     padding: 5px;
     margin: 10px;
     margin-left: 30px;
-    border: 2px solid transparent;
     box-sizing: border-box;
+    border: 1px solid ${colorSet.gray};
+    transition: border 0.3s ease;
   }
+
+  /* Theme buttons */
   #GREEN {
-    color: green;
+    color: #95d5b2;
   }
   #GREEN:hover {
-    border-color: green;
+    border-color: #95d5b2;
+  }
+  #BLUE {
+    color: #9fbaf9;
+  }
+  #BLUE:hover {
+    border-color: #9fbaf9;
+  }
+  #ROSE {
+    color: #ff8fa0;
+  }
+  #ROSE:hover {
+    border-color: #ff8fa0;
+  }
+  #RAINBOW {
+    color: #ffba82;
+  }
+  #RAINBOW:hover {
+    border-color: #ffba82;
+  }
+  #VIVID {
+    color: #deaaff;
+  }
+  #VIVID:hover {
+    border-color: #deaaff;
   }
 `;
 
@@ -129,6 +170,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   const [isThemeClicked, setIsThemeClicked] = useState(false);
   // initial value of isLogout is undefined = False
   const [isLoggin, setIsLoggin] = useState(isLogout);
+  const data = useSelector((state: IState) => state);
 
   const onMenuToggle = () => setToggleMenu((prev) => !prev);
   const onThemeToggle = () => setIsThemeClicked((prev) => !prev);
@@ -136,8 +178,16 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   const onGoHome = () => navigation("/");
   const onGoAddPage = () => navigation("/new");
   const onGoLoginPage = () => navigation("/login");
-  const onLogout = () => {
+
+  const onLogout = async () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
+      // Add data to Firebase
+      await addDoc(collection(getDBStore, "data"), { data });
+      //userid로 작성하고 state가 변경될때마다 저장.
+
+      //Log out
+      getAuthData.signOut();
+      navigation("/");
       setIsLoggin((prev) => !prev);
     }
   };
@@ -148,10 +198,25 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
     const obj = {
       id,
       theme: id,
+      date: "",
     };
     dispatch({ type: SET_THEME, data: obj });
+    setIsThemeClicked(false);
   };
 
+  useEffect(() => {
+    getAuthData.onAuthStateChanged((user) =>
+      user ? setIsLoggin(true) : setIsLoggin(false)
+    );
+  }, []);
+
+  if (userInfo.uid != "") {
+    const docRef = doc(getDBStore, userInfo.uid, "data");
+
+    console.log(getDoc(docRef));
+  }
+
+  // console.log(userInfo.uid);
   return (
     <Wrapper>
       <Navbar>
@@ -159,33 +224,42 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
         <button onClick={onMenuToggle}>
           <FontAwesomeIcon icon={faBars} />
         </button>
-        <Menu toggleMenu={toggleMenu}>
-          <div onClick={onGoHome}>홈</div>
-          {isLoggin ? (
-            <div onClick={onLogout}>로그아웃</div>
-          ) : (
-            <div onClick={onGoLoginPage}>로그인</div>
-          )}
-          <div onClick={onGoAddPage}>추가하기</div>
-          <div onClick={onThemeToggle}>테마</div>
-          <Theme isThemeClicked={isThemeClicked}>
-            <li id="GREEN" onClick={onTheme}>
-              그린
-            </li>
-            <li id="BLUE" onClick={onTheme}>
-              블루
-            </li>
-            <li id="ROSE" onClick={onTheme}>
-              레드
-            </li>
-            <li id="RAINBOW" onClick={onTheme}>
-              레인보우
-            </li>
-            <li id="VIVID" onClick={onTheme}>
-              비비드
-            </li>
-          </Theme>
-        </Menu>
+        {toggleMenu && (
+          <Menu>
+            <div onClick={onGoHome}>홈</div>
+            {isLoggin ? (
+              <div onClick={onLogout}>로그아웃</div>
+            ) : (
+              <div onClick={onGoLoginPage}>로그인</div>
+            )}
+            <div onClick={onGoAddPage}>추가하기</div>
+            <div onClick={onThemeToggle}>
+              테마
+              <FontAwesomeIcon
+                icon={isThemeClicked ? faAngleUp : faAngleDown}
+              />
+            </div>
+            {isThemeClicked && (
+              <Theme>
+                <li id="GREEN" onClick={onTheme}>
+                  그린
+                </li>
+                <li id="BLUE" onClick={onTheme}>
+                  블루
+                </li>
+                <li id="ROSE" onClick={onTheme}>
+                  레드
+                </li>
+                <li id="RAINBOW" onClick={onTheme}>
+                  레인보우
+                </li>
+                <li id="VIVID" onClick={onTheme}>
+                  비비드
+                </li>
+              </Theme>
+            )}
+          </Menu>
+        )}
       </Navbar>
       <Children>
         <span>{leftBtn}</span>

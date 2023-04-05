@@ -1,4 +1,6 @@
 import { legacy_createStore as createStore } from "redux";
+import { setDoc, doc } from "firebase/firestore";
+import { getDBStore, userInfo } from "./my-firebase";
 
 // Interface
 export interface IState {
@@ -21,7 +23,7 @@ export interface IState {
 export interface IData {
   id: string;
   title?: string;
-  date?: string;
+  date: string;
   memo?: string;
   amount?: number; // BudgetBook
   category?: string; // BudgetBook
@@ -132,7 +134,7 @@ export function reducer(
         data: {
           budgetBook: {
             ...state.data.budgetBook,
-            [date!]: [...(state.data.budgetBook[date!] ?? []), action.data],
+            [date]: [...(state.data.budgetBook[date] ?? []), action.data],
           },
           diary: state.data.diary,
           schedule: state.data.schedule,
@@ -145,7 +147,7 @@ export function reducer(
         data: {
           diary: {
             ...state.data.diary,
-            [action.data.date!]: action.data,
+            [action.data.date]: action.data,
           },
           budgetBook: state.data.budgetBook,
           schedule: state.data.schedule,
@@ -160,8 +162,8 @@ export function reducer(
           diary: state.data.diary,
           schedule: {
             ...state.data.schedule,
-            [action.data.date!]: [
-              ...(state.data.schedule[action.data.date!] ?? []),
+            [action.data.date]: [
+              ...(state.data.schedule[action.data.date] ?? []),
               action.data,
             ],
           },
@@ -177,7 +179,7 @@ export function reducer(
           ...state.data,
           budgetBook: {
             ...state.data.budgetBook,
-            [date!]: state.data.budgetBook[date!].map((list) =>
+            [date]: state.data.budgetBook[date].map((list) =>
               list.id === id ? { ...action.data } : list
             ),
           },
@@ -193,11 +195,10 @@ export function reducer(
           ...state.data,
           diary: {
             ...state.data.diary,
-            [date!]: action.data,
+            [date]: action.data,
           },
         },
       };
-      break;
     }
 
     case EDIT_SCHEDULE: {
@@ -208,13 +209,12 @@ export function reducer(
           ...state.data,
           schedule: {
             ...state.data.schedule,
-            [date!]: state.data.schedule[date!].map((list) =>
+            [date]: state.data.schedule[date].map((list) =>
               list.id === id ? { ...action.data } : list
             ),
           },
         },
       };
-      break;
     }
 
     // Remove data
@@ -226,7 +226,7 @@ export function reducer(
         data: {
           ...state.data,
           budgetBook: {
-            [date!]: state.data.budgetBook[date!].filter(
+            [date]: state.data.budgetBook[date].filter(
               (list) => list.id !== id
             ),
           },
@@ -236,7 +236,7 @@ export function reducer(
 
     case REMOVE_DIARY: {
       const { date } = action.data;
-      const { [date!]: toRemove, ...otherData } = state.data.diary;
+      const { [date]: toRemove, ...otherData } = state.data.diary;
       // [date]의 key값을 toRemove라는 변수에 저장
 
       return {
@@ -255,9 +255,7 @@ export function reducer(
         data: {
           ...state.data,
           schedule: {
-            [date!]: state.data.schedule[date!].filter(
-              (list) => list.id !== id
-            ),
+            [date]: state.data.schedule[date].filter((list) => list.id !== id),
           },
         },
       };
@@ -278,3 +276,11 @@ export function reducer(
 }
 
 export const store = createStore(reducer);
+
+// Save the value to Firebase when state changes
+store.subscribe(async () => {
+  const state = store.getState();
+  if (userInfo.uid != "") {
+    await setDoc(doc(getDBStore, "data", userInfo.uid), { state });
+  }
+});

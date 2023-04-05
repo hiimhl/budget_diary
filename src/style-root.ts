@@ -2,6 +2,7 @@
 
 export const space = {
   micro: "5px",
+  button: "7px",
   small: "10px",
   basic: "15px",
   middle: "20px",

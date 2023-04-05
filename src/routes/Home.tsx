@@ -30,12 +30,11 @@ const DetailCard = styled.div`
 `;
 
 function Home() {
-  const [isToday, setIsToday] = useState(true);
+  const [isToday, setIsToday] = useState(false);
 
   const dayList = getWeekList(day);
   const navigation = useNavigate();
 
-  const budgetData = useSelector((state: IState) => state.data.budgetBook);
   const DiaryData = useSelector((state: any) => state.diary);
   const onCreate = () => navigation("/new");
 

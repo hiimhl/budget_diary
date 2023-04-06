@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Wrapper } from "../routes/Home";
-import { IState } from "../store";
+import { IState } from "../store/actions";
 import DetailItem from "./UI/DetailItem";
 
 function DetailPage() {

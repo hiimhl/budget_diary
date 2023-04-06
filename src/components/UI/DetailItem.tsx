@@ -8,7 +8,7 @@ import {
   REMOVE_BUDGET,
   REMOVE_DIARY,
   REMOVE_SCHEDULE,
-} from "../../store";
+} from "../../store/actions";
 import Header, { LeftRightBtn } from "../Header";
 import dayjs from "dayjs";
 import {

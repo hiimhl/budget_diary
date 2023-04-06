@@ -35,7 +35,7 @@ export const rainbowTheme: DefaultTheme = {
 export const vividTheme: DefaultTheme = {
   textColor: "#000000",
   backgroundColor: "#f6f6f6",
-  pointColor: "#DEAAFF",
+  pointColor: "#ae82f4",
   cardColor: "#ffffff",
   weekColor: {
     week_0: "#D6FFF1",

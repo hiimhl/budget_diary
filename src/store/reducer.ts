@@ -1,125 +1,21 @@
 import { legacy_createStore as createStore } from "redux";
-import { setDoc, doc } from "firebase/firestore";
-import { getDBStore, userInfo } from "./my-firebase";
 
-// Interface
-export interface IState {
-  user: {
-    theme: string;
-  };
-  data: {
-    budgetBook: {
-      [key: string]: IData[];
-    };
-    diary: {
-      [key: string]: IData;
-    };
-    schedule: {
-      [key: string]: IData[];
-    };
-  };
-}
-
-export interface IData {
-  id: string;
-  title?: string;
-  date: string;
-  memo?: string;
-  amount?: number; // BudgetBook
-  category?: string; // BudgetBook
-  pay?: string; // BudgetBook
-  time?: string; // Diary, BudgetBook
-  emoji?: string; // Diary
-  startDate?: string; // Schedule
-  endDate?: string; // Schedule
-  theme?: string; // Theme
-}
-
-export const ADD_BUDGET = "ADD_BUDGET";
-export const ADD_DIARY = "ADD_DIARY";
-export const ADD_SCHEDULE = "ADD_SCHEDULE";
-export const EDIT_BUDGET = "EDIT_BUDGET";
-export const EDIT_DIARY = "EDIT_DIARY";
-export const EDIT_SCHEDULE = "EDIT_SCHEDULE";
-export const REMOVE_BUDGET = "REMOVE_BUDGET";
-export const REMOVE_DIARY = "REMOVE_DIARY";
-export const REMOVE_SCHEDULE = "REMOVE_SCHEDULE";
-export const SET_THEME = "SET_THEME";
-
-type IType =
-  | "ADD_BUDGET"
-  | "ADD_DIARY"
-  | "ADD_SCHEDULE"
-  | "EDIT_BUDGET"
-  | "EDIT_DIARY"
-  | "EDIT_SCHEDULE"
-  | "REMOVE_BUDGET"
-  | "REMOVE_DIARY"
-  | "REMOVE_SCHEDULE"
-  | "SET_THEME";
-
-// State
-export const initialState: IState = {
-  user: {
-    theme: "",
-  },
-  data: {
-    budgetBook: {
-      "2023-03-30": [
-        {
-          id: "012",
-          title: "편의점",
-          date: "2023-03-30",
-          time: "2023-03-30T12:00",
-          memo: "과자 구매",
-          amount: -1000,
-          category: "식비",
-          pay: "신용카드",
-        },
-        {
-          id: "015",
-          title: "과자",
-          date: "2023-03-30",
-          time: "2023-03-30T16:00",
-          memo: "과자 구매",
-          amount: -1200,
-          category: "식비",
-          pay: "신용카드",
-        },
-      ],
-    },
-    diary: {
-      "2023-03-30": {
-        id: "012333333333",
-        title: "산책을 갔다",
-        date: "2023-03-30",
-        memo: "과자 구매",
-        time: "2023-03-30T09:00",
-        emoji: "emoji_1",
-      },
-    },
-    schedule: {
-      "2023-03-30": [
-        {
-          id: "0123333",
-          title: "편의점가기",
-          date: "2023-03-30",
-          memo: "과자 구매",
-          time: "2023-03-30T09:00",
-          endDate: "2023-03-30T09:00",
-        },
-        {
-          id: "015444444",
-          title: "과자사기",
-          date: "2023-03-30",
-          memo: "과자 구매",
-          time: "2023-03-22T09:00",
-          endDate: "2023-03-18T09:00",
-        },
-      ],
-    },
-  },
-};
+import {
+  ADD_BUDGET,
+  ADD_DIARY,
+  ADD_SCHEDULE,
+  EDIT_BUDGET,
+  EDIT_DIARY,
+  EDIT_SCHEDULE,
+  REMOVE_BUDGET,
+  REMOVE_DIARY,
+  REMOVE_SCHEDULE,
+  SET_THEME,
+  IData,
+  IState,
+  IType,
+} from "./actions";
+import { initialState } from "./initialState";
 
 // Reducer
 export function reducer(
@@ -276,11 +172,3 @@ export function reducer(
 }
 
 export const store = createStore(reducer);
-
-// Save the value to Firebase when state changes
-store.subscribe(async () => {
-  const state = store.getState();
-  if (userInfo.uid != "") {
-    await setDoc(doc(getDBStore, "data", userInfo.uid), { state });
-  }
-});

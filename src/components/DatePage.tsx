@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import DateList from "./UI/DateList";
 import Header, { LeftRightBtn } from "./Header";
-import { IState } from "../store";
+import { IState } from "../store/actions";
 import {
   borderRadius,
   colorSet,

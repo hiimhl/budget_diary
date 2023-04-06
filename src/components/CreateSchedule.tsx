@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { ADD_SCHEDULE, EDIT_SCHEDULE } from "../store";
+import { ADD_SCHEDULE, EDIT_SCHEDULE } from "../store/actions";
 import { day } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";

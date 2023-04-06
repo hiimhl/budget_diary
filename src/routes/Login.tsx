@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { Wrapper } from "../routes/Home";
+import { Wrapper } from "./Home";
 import {
   borderRadius,
   colorSet,
@@ -11,7 +11,7 @@ import {
   fontWeight,
   space,
 } from "../style-root";
-import Header from "./Header";
+import Header from "../components/Header";
 
 // Firebase
 import {
@@ -149,7 +149,7 @@ interface IForm {
 }
 
 function Login() {
-  const [newAccount, setNewAccount] = useState(false);
+  const [newAccount, setNewAccount] = useState(true);
   const [authError, setAuthError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const {
@@ -164,12 +164,11 @@ function Login() {
   // Creact Account or Login
   const onSubmit = async (data: IForm) => {
     try {
-      let sendData;
       setAuthError("");
 
       if (newAccount) {
         // create account && Log in
-        sendData = await createUserWithEmailAndPassword(
+        await createUserWithEmailAndPassword(
           getAuthData,
           data.userId,
           data.password
@@ -178,7 +177,7 @@ function Login() {
         setIsLoggedIn(true);
       } else {
         // log in
-        sendData = await signInWithEmailAndPassword(
+        await signInWithEmailAndPassword(
           getAuthData,
           data.userId,
           data.password
@@ -194,7 +193,7 @@ function Login() {
   };
 
   const onToggleLog = () => setNewAccount((prev) => !prev);
-
+  console.log(newAccount);
   // Social login
   const onSocialLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const { id } = e.currentTarget;
@@ -210,7 +209,7 @@ function Login() {
     <Wrapper>
       <Header isLogout={isLoggedIn} />
       <FormCard isValid={isValid}>
-        <h2>{newAccount ? "로그인" : "회원가입"}</h2>
+        <h2>{newAccount ? "회원가입" : "로그인"}</h2>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="userId">아이디</label>
           <input
@@ -240,7 +239,7 @@ function Login() {
           />
           <p>{errors?.password?.message}</p>
           {authError && <p>{authError}</p>}
-          <input type={"submit"} value="로그인" />
+          <input type={"submit"} value={newAccount ? "회원가입" : "로그인"} />
         </form>
         <Buttons>
           <button id="google" onClick={onSocialLogin}>
@@ -257,7 +256,7 @@ function Login() {
           </button>
         </Buttons>
         <AccountBtn onClick={onToggleLog}>
-          {newAccount ? "회원가입 " : "로그인 "}
+          {newAccount ? "로그인 " : "회원가입 "}
           <FontAwesomeIcon icon={faArrowRightLong} />
         </AccountBtn>
       </FormCard>

@@ -2,14 +2,13 @@ import {
   faAngleDown,
   faAngleUp,
   faBars,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IState, SET_THEME } from "../store";
+import { IState, SET_THEME } from "../store/actions";
 import {
   borderRadius,
   boxShadow,
@@ -19,8 +18,9 @@ import {
   fontWeight,
   space,
 } from "../style-root";
-import { getAuthData, getDBStore, userInfo } from "../my-firebase";
+import { getAuthData, getDBStore } from "../my-firebase";
 import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { userInfo } from "../store/database";
 
 const Wrapper = styled.header`
   width: 650px;
@@ -153,6 +153,12 @@ export const LeftRightBtn = styled.button`
   }
 `;
 
+const UserName = styled.span`
+  padding: ${space.micro};
+  margin: ${space.small};
+  margin-left: ${space.middle};
+`;
+
 // Interface
 interface IProps {
   leftBtn?: ReactNode | string;
@@ -210,13 +216,6 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
     );
   }, []);
 
-  if (userInfo.uid != "") {
-    const docRef = doc(getDBStore, userInfo.uid, "data");
-
-    console.log(getDoc(docRef));
-  }
-
-  // console.log(userInfo.uid);
   return (
     <Wrapper>
       <Navbar>
@@ -226,6 +225,13 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
         </button>
         {toggleMenu && (
           <Menu>
+            {userInfo.uid && (
+              <UserName>
+                {userInfo.displayName
+                  ? userInfo.displayName + "님의 기록"
+                  : "user님의 기록"}
+              </UserName>
+            )}
             <div onClick={onGoHome}>홈</div>
             {isLoggin ? (
               <div onClick={onLogout}>로그아웃</div>

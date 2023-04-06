@@ -1,18 +1,8 @@
-import firebase, { initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  getFirestore,
-  onSnapshot,
-  query,
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import "firebase/database";
-import { getDatabase } from "firebase/database";
-import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -30,19 +20,3 @@ const analytics = getAnalytics(myFirebase);
 
 export const getAuthData = getAuth();
 export const getDBStore = getFirestore(myFirebase);
-
-// Save User Data
-export let userInfo = { uid: "" };
-
-getAuthData.onAuthStateChanged((user) => {
-  if (user) {
-    userInfo = user;
-  }
-});
-
-export let userData = {};
-if (userInfo.uid != "") {
-  const docRef = doc(getDBStore, userInfo.uid, "data");
-
-  userData = getDoc(docRef);
-}

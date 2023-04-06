@@ -1,15 +1,12 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
 import Month from "../components/Month";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
-import { IState } from "../store";
-import { borderRadius, boxShadow, font, fontSize, space } from "../style-root";
-import { day, getWeek, getWeekList, today } from "../util/day";
+import { boxShadow } from "../style-root";
 
 // Style
 export const Wrapper = styled.div`
@@ -32,10 +29,7 @@ const DetailCard = styled.div`
 function Home() {
   const [isToday, setIsToday] = useState(false);
 
-  const dayList = getWeekList(day);
   const navigation = useNavigate();
-
-  const DiaryData = useSelector((state: any) => state.diary);
   const onCreate = () => navigation("/new");
 
   const onIsToday = () => setIsToday(false);

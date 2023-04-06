@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Provider } from "react-redux";
+import { store } from "./store/reducer";
 import { useSelector } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./global-style";
 import Router from "./Router";
-import { IState } from "./store";
+import { IState } from "./store/actions";
 import {
   blueTheme,
   greenTheme,
@@ -11,10 +13,8 @@ import {
   roseTheme,
   vividTheme,
 } from "./theme";
-
 function App() {
   const [getTheme, setGetTheme] = useState(blueTheme);
-
   const userTheme = useSelector((state: IState) => state.user.theme);
 
   // Set the Theme
@@ -46,10 +46,12 @@ function App() {
   }, [userTheme]);
 
   return (
-    <ThemeProvider theme={getTheme}>
-      <GlobalStyle />
-      <Router />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={getTheme}>
+        <GlobalStyle />
+        <Router />
+      </ThemeProvider>
+    </Provider>
   );
 }
 

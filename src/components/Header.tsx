@@ -5,10 +5,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { ReactNode, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IState, SET_THEME } from "../store/actions";
+import { RESET_DATA, SET_THEME } from "../store/actions-type";
 import {
   borderRadius,
   boxShadow,
@@ -18,8 +18,7 @@ import {
   fontWeight,
   space,
 } from "../style-root";
-import { getAuthData, getDBStore } from "../my-firebase";
-import { addDoc, collection, doc, getDoc } from "firebase/firestore";
+import { getAuthData } from "../my-firebase";
 import { userInfo } from "../store/database";
 
 const Wrapper = styled.header`
@@ -153,12 +152,6 @@ export const LeftRightBtn = styled.button`
   }
 `;
 
-const UserName = styled.span`
-  padding: ${space.micro};
-  margin: ${space.small};
-  margin-left: ${space.middle};
-`;
-
 // Interface
 interface IProps {
   leftBtn?: ReactNode | string;
@@ -174,9 +167,9 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
 
   const [toggleMenu, setToggleMenu] = useState(false);
   const [isThemeClicked, setIsThemeClicked] = useState(false);
+
   // initial value of isLogout is undefined = False
   const [isLoggin, setIsLoggin] = useState(isLogout);
-  const data = useSelector((state: IState) => state);
 
   const onMenuToggle = () => setToggleMenu((prev) => !prev);
   const onThemeToggle = () => setIsThemeClicked((prev) => !prev);
@@ -187,14 +180,13 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
 
   const onLogout = async () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
-      // Add data to Firebase
-      await addDoc(collection(getDBStore, "data"), { data });
-      //userid로 작성하고 state가 변경될때마다 저장.
-
-      //Log out
+      //Log out - firebase
       getAuthData.signOut();
       navigation("/");
+      // menu logout -> login
       setIsLoggin((prev) => !prev);
+      userInfo.uid = null;
+      dispatch({ type: RESET_DATA });
     }
   };
 
@@ -225,13 +217,6 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
         </button>
         {toggleMenu && (
           <Menu>
-            {userInfo.uid && (
-              <UserName>
-                {userInfo.displayName
-                  ? userInfo.displayName + "님의 기록"
-                  : "user님의 기록"}
-              </UserName>
-            )}
             <div onClick={onGoHome}>홈</div>
             {isLoggin ? (
               <div onClick={onLogout}>로그아웃</div>

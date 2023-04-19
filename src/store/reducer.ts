@@ -1,5 +1,4 @@
-import { legacy_createStore as createStore } from "redux";
-
+// Redux reducer
 import {
   ADD_BUDGET,
   ADD_DIARY,
@@ -14,15 +13,21 @@ import {
   IData,
   IState,
   IType,
-} from "./actions";
+  GET_DATA,
+  RESET_DATA,
+} from "./actions-type";
 import { initialState } from "./initialState";
 
 // Reducer
 export function reducer(
   state: IState = initialState,
-  action: { type: IType; data: IData }
+  action: { type: IType; data: IData & IState }
 ) {
   switch (action.type) {
+    //User Log in
+    case GET_DATA:
+      return (state = action.data);
+
     case ADD_BUDGET:
       const { date } = action.data;
       return {
@@ -165,10 +170,18 @@ export function reducer(
         },
       };
     }
+    // When user Log out
+    case RESET_DATA:
+      return {
+        user: { theme: "BLUE" },
+        data: {
+          budgetBook: {},
+          diary: {},
+          schedule: {},
+        },
+      };
 
     default:
       return state;
   }
 }
-
-export const store = createStore(reducer);

@@ -193,7 +193,7 @@ function Login() {
   };
 
   const onToggleLog = () => setNewAccount((prev) => !prev);
-  console.log(newAccount);
+
   // Social login
   const onSocialLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     const { id } = e.currentTarget;

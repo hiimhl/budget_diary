@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
-import { IState } from "../store/actions";
+import { IState } from "../store/actions-type";
 import { useNavigate } from "react-router-dom";
 import { day, today } from "../util/day";
 import {

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { IState } from "../store/actions";
+import { IState } from "../store/actions-type";
 import {
   borderRadius,
   boxShadow,

@@ -18,7 +18,7 @@ import {
   faMinus,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-import { IData } from "../../store/actions";
+import { IData } from "../../store/actions-type";
 import { imageUrl } from "../../util/image";
 
 // Style

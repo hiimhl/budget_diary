@@ -42,6 +42,8 @@ export const REMOVE_BUDGET = "REMOVE_BUDGET";
 export const REMOVE_DIARY = "REMOVE_DIARY";
 export const REMOVE_SCHEDULE = "REMOVE_SCHEDULE";
 export const SET_THEME = "SET_THEME";
+export const GET_DATA = "GET_DATA";
+export const RESET_DATA = "RESET_DATA";
 
 export type IType =
   | "ADD_BUDGET"
@@ -53,4 +55,6 @@ export type IType =
   | "REMOVE_BUDGET"
   | "REMOVE_DIARY"
   | "REMOVE_SCHEDULE"
-  | "SET_THEME";
+  | "SET_THEME"
+  | "GET_DATA"
+  | "RESET_DATA";

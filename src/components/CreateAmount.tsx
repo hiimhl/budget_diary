@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { ADD_BUDGET, EDIT_BUDGET } from "../store/actions";
+import { ADD_BUDGET, EDIT_BUDGET } from "../store/actions-type";
 import { day, setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";

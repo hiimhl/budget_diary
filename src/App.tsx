@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Provider } from "react-redux";
-import { store } from "./store/reducer";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./global-style";
 import Router from "./Router";
-import { IState } from "./store/actions";
+import { IState } from "./store/actions-type";
 import {
   blueTheme,
   greenTheme,
@@ -13,45 +12,50 @@ import {
   roseTheme,
   vividTheme,
 } from "./theme";
+import { getDataFromFirebase } from "./store/database";
+import { getAuthData } from "./my-firebase";
+
 function App() {
   const [getTheme, setGetTheme] = useState(blueTheme);
   const userTheme = useSelector((state: IState) => state.user.theme);
+  const [user, setUser] = useState(false);
+  const dispatch = useDispatch();
+
+  // User Login
+  useEffect(() => {
+    getAuthData.onAuthStateChanged((user) =>
+      user ? setUser(true) : setUser(false)
+    );
+  }, [getAuthData]);
+
+  // Get the user data
+  useEffect(() => {
+    getDataFromFirebase(dispatch);
+  }, [user]);
 
   // Set the Theme
   useEffect(() => {
     switch (userTheme) {
-      case "GREEN": {
-        setGetTheme(greenTheme);
-        break;
-      }
-      case "BLUE": {
-        setGetTheme(blueTheme);
-        break;
-      }
-      case "ROSE": {
-        setGetTheme(roseTheme);
-        break;
-      }
-      case "RAINBOW": {
-        setGetTheme(rainbowTheme);
-        break;
-      }
-      case "VIVID": {
-        setGetTheme(vividTheme);
-        break;
-      }
+      case "GREEN":
+        return setGetTheme(greenTheme);
+      case "BLUE":
+        return setGetTheme(blueTheme);
+      case "ROSE":
+        return setGetTheme(roseTheme);
+      case "RAINBOW":
+        return setGetTheme(rainbowTheme);
+      case "VIVID":
+        return setGetTheme(vividTheme);
       default:
-        break;
+        return setGetTheme(blueTheme);
     }
   }, [userTheme]);
 
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={getTheme}>
-        <GlobalStyle />
-        <Router />
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={getTheme}>
+      <GlobalStyle />
+      <Router />
+    </ThemeProvider>
   );
 }
 

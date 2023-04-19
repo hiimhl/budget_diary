@@ -1,4 +1,5 @@
-import { IState } from "./actions";
+import { createSlice } from "@reduxjs/toolkit";
+import { IState } from "./actions-type";
 
 // State
 export const initialState: IState = {

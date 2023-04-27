@@ -64,6 +64,7 @@ function CreateSchedule() {
         title: data.title,
         date,
         time: data.date,
+        type: "schedule",
         endDate: data.endDate,
         id: isEdit ? editData.id : id,
         memo: data.memo,

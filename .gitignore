@@ -24,7 +24,5 @@ yarn-error.log*
 dummyData.ts
 type.ts
 
-Month.tsx
-
 # Api key
 .env

@@ -158,10 +158,17 @@ interface IProps {
   middleBtn?: ReactNode | string;
   rightBtn?: ReactNode | string;
   isLogout?: boolean;
+  hiddenLogo?: boolean;
 }
 
 // Component
-function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
+function Header({
+  leftBtn,
+  middleBtn,
+  rightBtn,
+  isLogout,
+  hiddenLogo,
+}: IProps) {
   const navigation = useNavigate();
   const dispatch = useDispatch();
 
@@ -210,53 +217,57 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
 
   return (
     <Wrapper>
-      <Navbar>
-        <span onClick={onGoHome}>logo</span>
-        <button onClick={onMenuToggle}>
-          <FontAwesomeIcon icon={faBars} />
-        </button>
-        {toggleMenu && (
-          <Menu>
-            <div onClick={onGoHome}>홈</div>
-            {isLoggin ? (
-              <div onClick={onLogout}>로그아웃</div>
-            ) : (
-              <div onClick={onGoLoginPage}>로그인</div>
+      {!hiddenLogo && (
+        <>
+          <Navbar>
+            <span onClick={onGoHome}>logo</span>
+            <button onClick={onMenuToggle}>
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+            {toggleMenu && (
+              <Menu>
+                <div onClick={onGoHome}>홈</div>
+                {isLoggin ? (
+                  <div onClick={onLogout}>로그아웃</div>
+                ) : (
+                  <div onClick={onGoLoginPage}>로그인</div>
+                )}
+                <div onClick={onGoAddPage}>추가하기</div>
+                <div onClick={onThemeToggle}>
+                  테마
+                  <FontAwesomeIcon
+                    icon={isThemeClicked ? faAngleUp : faAngleDown}
+                  />
+                </div>
+                {isThemeClicked && (
+                  <Theme>
+                    <li id="GREEN" onClick={onTheme}>
+                      그린
+                    </li>
+                    <li id="BLUE" onClick={onTheme}>
+                      블루
+                    </li>
+                    <li id="ROSE" onClick={onTheme}>
+                      레드
+                    </li>
+                    <li id="RAINBOW" onClick={onTheme}>
+                      레인보우
+                    </li>
+                    <li id="VIVID" onClick={onTheme}>
+                      비비드
+                    </li>
+                  </Theme>
+                )}
+              </Menu>
             )}
-            <div onClick={onGoAddPage}>추가하기</div>
-            <div onClick={onThemeToggle}>
-              테마
-              <FontAwesomeIcon
-                icon={isThemeClicked ? faAngleUp : faAngleDown}
-              />
-            </div>
-            {isThemeClicked && (
-              <Theme>
-                <li id="GREEN" onClick={onTheme}>
-                  그린
-                </li>
-                <li id="BLUE" onClick={onTheme}>
-                  블루
-                </li>
-                <li id="ROSE" onClick={onTheme}>
-                  레드
-                </li>
-                <li id="RAINBOW" onClick={onTheme}>
-                  레인보우
-                </li>
-                <li id="VIVID" onClick={onTheme}>
-                  비비드
-                </li>
-              </Theme>
-            )}
-          </Menu>
-        )}
-      </Navbar>
-      <Children>
-        <span>{leftBtn}</span>
-        <span>{middleBtn}</span>
-        <span>{rightBtn}</span>
-      </Children>
+          </Navbar>
+          <Children>
+            <span>{leftBtn}</span>
+            <span>{middleBtn}</span>
+            <span>{rightBtn}</span>
+          </Children>
+        </>
+      )}
     </Wrapper>
   );
 }

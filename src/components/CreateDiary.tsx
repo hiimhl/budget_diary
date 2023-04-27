@@ -97,8 +97,10 @@ function CreateDiary() {
       date,
       time: data.date,
       id,
+      type: "diary",
       emoji: data.emoji,
       memo: data.memo,
+      endDate: data.date,
     };
     dispatch({ type: isEdit ? EDIT_DIARY : ADD_DIARY, data: obj });
     reset();

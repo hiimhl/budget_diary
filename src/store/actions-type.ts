@@ -22,6 +22,7 @@ export interface IData {
   title?: string;
   date: string;
   memo?: string;
+  type?: string;
   amount?: number; // BudgetBook
   category?: string; // BudgetBook
   pay?: string; // BudgetBook

@@ -222,10 +222,12 @@ function CreateAmount() {
       amount,
       date,
       time: data.date,
+      type: "budgetBook",
       id: isEdit ? editData.id : id,
       category: data.category,
       pay: data.pay,
       memo: data.memo,
+      endDate: data.date,
     };
 
     dispatch({ type: isEdit ? EDIT_BUDGET : ADD_BUDGET, data: obj });

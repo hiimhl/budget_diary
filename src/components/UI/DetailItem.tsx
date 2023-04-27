@@ -109,10 +109,11 @@ const LoadingText = styled.h4`
 interface IProps {
   data: IData;
   type: string;
+  hiddenLogo?: boolean;
 }
 
 // Component
-function DetailItem({ data, type }: IProps) {
+function DetailItem({ data, type, hiddenLogo }: IProps) {
   const navigation = useNavigate();
   const dispatch = useDispatch();
   // Go daily list
@@ -177,6 +178,7 @@ function DetailItem({ data, type }: IProps) {
             }
             middleBtn={<button onClick={() => onEdit(data)}>수정</button>}
             rightBtn={<button onClick={() => onRemove(data)}>삭제</button>}
+            hiddenLogo={hiddenLogo}
           />
           <Card>
             <h2>{data.title}</h2>

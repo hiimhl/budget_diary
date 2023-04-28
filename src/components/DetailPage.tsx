@@ -20,7 +20,7 @@ function DetailPage() {
     <Wrapper>
       {type === "diary" && diary && <DetailItem type="diary" data={diary} />}
       {type === "budgetBook" && budgetBook && (
-        <DetailItem type="budget" data={budgetBook} />
+        <DetailItem type="budgetBook" data={budgetBook} />
       )}
       {type === "schedule" && schedule && (
         <DetailItem type="schedule" data={schedule} />

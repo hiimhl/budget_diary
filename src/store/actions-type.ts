@@ -3,6 +3,7 @@
 export interface IState {
   user: {
     theme: string;
+    todayView: boolean;
   };
   data: {
     budgetBook: {
@@ -31,6 +32,7 @@ export interface IData {
   startDate?: string; // Schedule
   endDate?: string; // Schedule
   theme?: string; // Theme
+  todayView?: boolean; // view today or month
 }
 
 export const ADD_BUDGET = "ADD_BUDGET";
@@ -45,6 +47,7 @@ export const REMOVE_SCHEDULE = "REMOVE_SCHEDULE";
 export const SET_THEME = "SET_THEME";
 export const GET_DATA = "GET_DATA";
 export const RESET_DATA = "RESET_DATA";
+export const SET_VIEW = "SET_VIEW";
 
 export type IType =
   | "ADD_BUDGET"
@@ -58,4 +61,5 @@ export type IType =
   | "REMOVE_SCHEDULE"
   | "SET_THEME"
   | "GET_DATA"
-  | "RESET_DATA";
+  | "RESET_DATA"
+  | "SET_VIEW";

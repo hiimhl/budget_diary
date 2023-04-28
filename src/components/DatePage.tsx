@@ -117,7 +117,7 @@ function DatePage() {
           <ul>
             {budgetBook &&
               budgetBook.map((list) => (
-                <DateList key={list.id} data={list} type={"budget"} />
+                <DateList key={list.id} data={list} type={"budgetBook"} />
               ))}
           </ul>
         </Card>

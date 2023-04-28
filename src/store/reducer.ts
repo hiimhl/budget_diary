@@ -15,6 +15,7 @@ import {
   IType,
   GET_DATA,
   RESET_DATA,
+  SET_VIEW,
 } from "./actions-type";
 import { initialState } from "./initialState";
 
@@ -166,14 +167,26 @@ export function reducer(
       return {
         ...state,
         user: {
+          ...state.user,
           theme: action.data.theme!,
         },
       };
     }
+
+    case SET_VIEW: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          monthView: action.data.todayView!,
+        },
+      };
+    }
+
     // When user Log out
     case RESET_DATA:
       return {
-        user: { theme: "BLUE" },
+        user: { theme: "BLUE", todayView: true },
         data: {
           budgetBook: {},
           diary: {},

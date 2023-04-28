@@ -7,6 +7,8 @@ import Month from "../components/Month";
 import TodayCard from "../components/TodayCard";
 import Week from "../components/Week";
 import { boxShadow } from "../style-root";
+import { useDispatch, useSelector } from "react-redux";
+import { IState, SET_VIEW } from "../store/actions-type";
 
 // Style
 export const Wrapper = styled.div`
@@ -27,13 +29,22 @@ const DetailCard = styled.div`
 `;
 
 function Home() {
-  const [isToday, setIsToday] = useState(false);
+  const userView = useSelector((state: IState) => state.user.todayView);
+  const [isToday, setIsToday] = useState(userView);
 
   const navigation = useNavigate();
+  const dispatch = useDispatch();
   const onCreate = () => navigation("/new");
 
-  const onIsToday = () => setIsToday(false);
-  const onIsMonth = () => setIsToday(true);
+  const onIsToday = () => {
+    setIsToday(true);
+    dispatch({ type: SET_VIEW, data: { todayView: true } });
+  };
+
+  const onIsMonth = () => {
+    setIsToday(false);
+    dispatch({ type: SET_VIEW, data: { todayView: false } });
+  };
 
   return (
     <Wrapper>
@@ -44,12 +55,12 @@ function Home() {
       />
       <DetailCard>
         {isToday ? (
-          <Month />
-        ) : (
           <>
             <TodayCard />
             <Week />
           </>
+        ) : (
+          <Month />
         )}
       </DetailCard>
     </Wrapper>

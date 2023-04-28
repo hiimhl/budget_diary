@@ -13,6 +13,7 @@ import Header, { LeftRightBtn } from "../Header";
 import dayjs from "dayjs";
 import {
   borderRadius,
+  boxShadow,
   colorSet,
   font,
   fontSize,
@@ -26,15 +27,17 @@ import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import { imageUrl } from "../../util/image";
 
 // Style
-const Card = styled.section`
+const Card = styled.section<{ cardShadow?: boolean; hiddenHeader?: boolean }>`
   width: 80%;
-  height: 70vh;
+  height: ${(props) => (props.hiddenHeader ? "60vh" : "70vh")};
   background-color: ${(props) => props.theme.weekColor.week_1};
   margin: auto;
   margin-top: ${space.middle};
   padding: ${space.middle};
   box-sizing: border-box;
+  box-shadow: ${(props) => (props.cardShadow ? boxShadow.large : "none")};
   border-radius: ${borderRadius.small};
+  position: relative;
 
   h2 {
     font-size: ${fontSize.large};
@@ -52,6 +55,35 @@ const Card = styled.section`
   }
 `;
 
+// Edit and Delete buttons
+const Buttons = styled.div`
+  position: absolute;
+  bottom: 12%;
+  right: 40px;
+
+  button {
+    padding: ${space.micro} ${space.small};
+    font-weight: ${fontWeight.title};
+    border: ${(props) => props.theme.pointColor} 2px solid;
+    border-radius: ${borderRadius.small};
+    color: ${colorSet.white};
+    background-color: ${(props) => props.theme.pointColor};
+    margin-right: ${space.small};
+  }
+
+  /* Delete btn */
+  button:last-child {
+    border: ${colorSet.red} 2px solid;
+    color: ${colorSet.red};
+    background-color: transparent;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  button:last-child:hover {
+    background-color: ${colorSet.red};
+    color: ${colorSet.white};
+  }
+`;
+
 const List = styled.li`
   display: grid;
   grid-template-columns: 27% 73%;
@@ -64,16 +96,19 @@ const List = styled.li`
     border: none;
   }
 
+  /* Heading */
   h3 {
     text-align: center;
     font-weight: ${fontWeight.small};
+    margin-bottom: ${space.basic};
   }
+  /* content */
   p {
-    margin-left: ${space.large};
+    margin-left: ${space.xlarge};
+    margin-bottom: ${space.basic};
     word-wrap: break-word;
     overflow-wrap: break-word;
     line-height: 1.3;
-
     overflow-y: scroll;
     -ms-overflow-style: none;
     &::-webkit-scrollbar {
@@ -87,7 +122,7 @@ const Emoji = styled.div`
   border-radius: 50%;
   width: ${space.mark};
   height: ${space.mark};
-  margin-left: ${space.large};
+  margin-left: ${space.xlarge};
 
   img {
     width: ${space.mark};
@@ -109,11 +144,12 @@ const LoadingText = styled.h4`
 interface IProps {
   data: IData;
   type: string;
-  hiddenLogo?: boolean;
+  hiddenHeader?: boolean;
+  cardShadow?: boolean;
 }
 
 // Component
-function DetailItem({ data, type, hiddenLogo }: IProps) {
+function DetailItem({ data, type, hiddenHeader, cardShadow }: IProps) {
   const navigation = useNavigate();
   const dispatch = useDispatch();
   // Go daily list
@@ -124,8 +160,10 @@ function DetailItem({ data, type, hiddenLogo }: IProps) {
   // Put data into Object to be Rendered
   useEffect(() => {
     if (data) {
-      const lastDay = //
-        data.endDate && dayjs(data.endDate).format("YYYY년 M월 D일 A h:mm");
+      const lastDay = // endate가 존재하면서 time과 같지 않은 경우만 출력
+        data.endDate && data.endDate != data.time
+          ? dayjs(data.endDate).format("YYYY년 M월 D일 A h:mm")
+          : undefined;
       const amountKey = data.amount! > 0 ? "수입금" : "지출금";
       const positiveAndLocalize =
         Math.abs(data.amount!).toLocaleString("ko-KR") + "원";
@@ -143,7 +181,7 @@ function DetailItem({ data, type, hiddenLogo }: IProps) {
 
   // Go to Edit page with Data
   const onEdit = (data: IData) => {
-    if (type === "budget") {
+    if (type === "budgetBook") {
       navigation("/new", { state: data });
     } else if (type === "schedule") {
       navigation("/new/schedule", { state: data });
@@ -155,32 +193,35 @@ function DetailItem({ data, type, hiddenLogo }: IProps) {
   // Delete the Data
   const onRemove = (data: IData) => {
     if (window.confirm("삭제하시겠습니까?")) {
-      if (type === "budget") {
+      if (type === "budgetBook") {
         dispatch({ type: REMOVE_BUDGET, data });
       } else if (type === "schedule") {
         dispatch({ type: REMOVE_SCHEDULE, data });
       } else if (type === "diary") {
         dispatch({ type: REMOVE_DIARY, data });
       }
+      navigation("/");
     }
     navigation(-1);
   };
+  //팝업창이 닫히고 event내역이 업데이트돼야함.
 
   return (
     <>
       {data ? (
         <>
-          <Header
-            leftBtn={
-              <LeftRightBtn onClick={onGoDetailList}>
-                <FontAwesomeIcon icon={faAngleLeft} />
-              </LeftRightBtn>
-            }
-            middleBtn={<button onClick={() => onEdit(data)}>수정</button>}
-            rightBtn={<button onClick={() => onRemove(data)}>삭제</button>}
-            hiddenLogo={hiddenLogo}
-          />
-          <Card>
+          {!hiddenHeader && (
+            <Header
+              leftBtn={
+                <LeftRightBtn onClick={onGoDetailList}>
+                  <FontAwesomeIcon icon={faAngleLeft} />
+                </LeftRightBtn>
+              }
+              middleBtn={<button onClick={() => onEdit(data)}>수정</button>}
+              rightBtn={<button onClick={() => onRemove(data)}>삭제</button>}
+            />
+          )}
+          <Card cardShadow={cardShadow} hiddenHeader={hiddenHeader}>
             <h2>{data.title}</h2>
             <ul>
               <VerticalLine as={"li"} />
@@ -202,6 +243,12 @@ function DetailItem({ data, type, hiddenLogo }: IProps) {
                     </List>
                   ))}
             </ul>
+            {hiddenHeader && (
+              <Buttons>
+                <button onClick={() => onEdit(data)}>수정</button>
+                <button onClick={() => onRemove(data)}>삭제</button>
+              </Buttons>
+            )}
           </Card>
         </>
       ) : (

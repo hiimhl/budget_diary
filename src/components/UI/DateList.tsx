@@ -136,7 +136,7 @@ function DateList({ data, type }: IPops) {
           </p>
         </ScheduleContent>
       )}
-      {type === "budget" && (
+      {type === "budgetBook" && (
         <BudgetContent onClick={() => onGoDetail("budgetBook")}>
           <i>
             <FontAwesomeIcon icon={data.amount! > 0 ? faPlus : faMinus} />

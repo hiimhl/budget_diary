@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { ADD_SCHEDULE, EDIT_SCHEDULE } from "../store/actions-type";
+import {
+  ADD_SCHEDULE,
+  EDIT_SCHEDULE,
+  REMOVE_SCHEDULE,
+} from "../store/actions-type";
 import { day } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -69,6 +73,16 @@ function CreateSchedule() {
         id: isEdit ? editData.id : id,
         memo: data.memo,
       };
+      // 수정할 데이터의 날짜를 모두 수정한다면
+      if (isEdit && editData.date != date) {
+        const editObj = {
+          id: editData.id,
+          date: editData.date,
+        };
+        dispatch({ type: REMOVE_SCHEDULE, data: editObj });
+        dispatch({ type: ADD_SCHEDULE, data: obj });
+        return navigation(`/${date}`);
+      }
       dispatch({ type: isEdit ? EDIT_SCHEDULE : ADD_SCHEDULE, data: obj });
       reset();
 

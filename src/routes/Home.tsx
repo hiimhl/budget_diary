@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
@@ -29,12 +29,16 @@ const DetailCard = styled.div`
 `;
 
 function Home() {
+  const [isToday, setIsToday] = useState(true);
   const userView = useSelector((state: IState) => state.user.todayView);
-  const [isToday, setIsToday] = useState(userView);
 
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const onCreate = () => navigation("/new");
+
+  useEffect(() => {
+    setIsToday(userView);
+  }, [userView]);
 
   const onIsToday = () => {
     setIsToday(true);

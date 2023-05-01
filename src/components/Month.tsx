@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import {
-  Calendar,
-  dayjsLocalizer,
-  Views,
-  EventPropGetter,
-} from "react-big-calendar";
+import { Calendar, dayjsLocalizer, Views } from "react-big-calendar";
 import { useSelector } from "react-redux";
 import { IState } from "../store/actions-type";
 import { IData } from "../store/actions-type";
@@ -15,6 +10,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
 import { colorSet, fontSize } from "../style-root";
+import { useNavigate } from "react-router-dom";
+import { imageUrl } from "../util/image";
 
 // style
 const MonthWrapper = styled.section`
@@ -25,13 +22,18 @@ const MonthWrapper = styled.section`
 
   /* Today */
   .rbc-today {
-    background-color: ${(props) => props.theme.weekColor.week_2};
+    background-color: ${(props) => props.theme.weekColor.week_1};
   }
-
+  /* day number */
+  .rbc-button-link {
+    float: left;
+    margin: 1px 2px;
+  }
   /* Event */
   .rbc-event {
-    background-color: ${(props) => props.theme.pointColor};
+    background-color: ${(props) => props.theme.weekColor.week_4};
     border-radius: 0;
+    color: black;
   }
 `;
 
@@ -55,6 +57,22 @@ const Icon = styled(FontAwesomeIcon)`
   color: ${colorSet.red};
 `;
 
+// Event icon box
+const EventBox = styled.div`
+  width: 20px;
+  text-align: end;
+  width: 13%;
+  position: absolute;
+  transform: translate(0, -18px);
+
+  img {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: ${colorSet.emoji};
+  }
+`;
+
 // Localizer
 const localizer = dayjsLocalizer(dayjs);
 
@@ -65,13 +83,53 @@ function MyCalendar() {
   const [clickEvent, setClickEvent] = useState<IData>();
   const data = useSelector((state: IState) => state.data);
 
+  const navigation = useNavigate();
+
   useEffect(() => {
     const schedule = Object.values(data.schedule).flatMap((data) => data);
-    const budgetBook = Object.values(data.budgetBook).flatMap((data) => data);
     const diary = Object.values(data.diary).flatMap((data) => data);
-    const array = [...schedule, ...budgetBook, ...diary];
+    // make total amount
+    const budgetBook = Object.values(data.budgetBook).flatMap((arr) => {
+      const data = arr.reduce((acc, { amount }) => acc + amount!, 0);
+      return {
+        id: "",
+        date: "",
+        title: data + "원",
+        time: arr[0].time,
+        endDate: arr[0].time,
+        type: data > 0 ? "positive" : "negative",
+      };
+    });
+    const array = [...diary, ...schedule, ...budgetBook];
     setEvents(array);
   }, [isClicked]);
+
+  // Styled to type
+  const eventPropGetter = (event: any) => {
+    let style = { backgroundColor: "", color: "black" };
+    if (event.type === "diary") {
+      style.backgroundColor = "transparent";
+    } else if (event.type === "positive") {
+      style.backgroundColor = "transparent";
+      style.color = "blue";
+    } else if (event.type === "negative") {
+      style.backgroundColor = "transparent";
+      style.color = "red";
+    }
+    return { style };
+  };
+
+  const EventIcon = ({ event }: any) => {
+    if (event.type === "diary") {
+      return (
+        <EventBox>
+          <img src={`${imageUrl}${event.emoji}.svg`} />
+        </EventBox>
+      );
+    } else {
+      return <>{event.title}</>;
+    }
+  };
 
   // Show clicked event
   const onDayclick = (event: IData) => {
@@ -81,8 +139,9 @@ function MyCalendar() {
   };
 
   // show today events
-  const onShowMoreEvents = (events: IData[], date: Date) => {
-    console.log(events, date);
+  const onShowMoreEvents = (events: IData[]) => {
+    const clickDate = events[0].date;
+    navigation(`/${clickDate}`);
   };
 
   const onClosePopUp = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -104,8 +163,9 @@ function MyCalendar() {
         views={[Views.MONTH]}
         startAccessor="time"
         endAccessor="endDate"
-        style={{ height: "550px" }}
-        // eventPropGetter={eventPropGetter}
+        style={{ height: "750px" }}
+        eventPropGetter={eventPropGetter}
+        components={{ event: EventIcon }}
         messages={{ showMore: (total) => `+${total} 더보기` }}
       />
       {isClicked && (

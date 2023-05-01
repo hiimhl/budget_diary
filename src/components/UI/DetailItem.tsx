@@ -181,6 +181,7 @@ function DetailItem({ data, type, hiddenHeader, cardShadow }: IProps) {
 
   // Go to Edit page with Data
   const onEdit = (data: IData) => {
+    console.log(data);
     if (type === "budgetBook") {
       navigation("/new", { state: data });
     } else if (type === "schedule") {

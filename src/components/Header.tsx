@@ -178,7 +178,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   const onGoAddPage = () => navigation("/new");
   const onGoLoginPage = () => navigation("/login");
 
-  const onLogout = async () => {
+  const onLogout = () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
       //Log out - firebase
       getAuthData.signOut();
@@ -190,15 +190,10 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
     }
   };
 
+  // Set Theme
   const onTheme = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
     const { id } = e.currentTarget;
-
-    const obj = {
-      id,
-      theme: id,
-      date: "",
-    };
-    dispatch({ type: SET_THEME, data: obj });
+    dispatch({ type: SET_THEME, data: { theme: id } });
     setIsThemeClicked(false);
   };
 

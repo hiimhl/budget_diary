@@ -305,6 +305,7 @@ function CreateAmount() {
             <select {...register("category", { required: true })} id="category">
               <option value="식비">식비</option>
               <option value="교통비">교통비</option>
+              <option value="유흥비">유흥비</option>
               <option value="건강유지비">건강유지비</option>
               <option value="교육비">교육비</option>
               <option value="미용">미용</option>

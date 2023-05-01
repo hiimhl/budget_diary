@@ -178,7 +178,7 @@ export function reducer(
         ...state,
         user: {
           ...state.user,
-          monthView: action.data.todayView!,
+          todayView: action.data.todayView!,
         },
       };
     }

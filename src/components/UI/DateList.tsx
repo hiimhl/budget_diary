@@ -144,7 +144,7 @@ function DateList({ data, type }: IPops) {
           <div>
             <h5>{data.title}</h5>
             <span>
-              {data.amount}
+              {data.amount!.toLocaleString()}
               {"원 | "}
               {data.pay}
               {" | "}

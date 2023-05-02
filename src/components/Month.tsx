@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { Calendar, dayjsLocalizer, Views } from "react-big-calendar";
+import {
+  Calendar,
+  dayjsLocalizer,
+  ToolbarProps,
+  Views,
+} from "react-big-calendar";
 import { useSelector } from "react-redux";
 import { IState } from "../store/actions-type";
 import { IData } from "../store/actions-type";
 import DetailItem from "./UI/DetailItem";
-import styled from "styled-components";
+import styled, { useTheme } from "styled-components";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareXmark } from "@fortawesome/free-solid-svg-icons";
-import { colorSet, fontSize } from "../style-root";
+import {
+  faAngleLeft,
+  faAngleRight,
+  faSquareXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { colorSet, fontSize, fontWeight } from "../style-root";
 import { useNavigate } from "react-router-dom";
 import { imageUrl } from "../util/image";
 
@@ -22,7 +31,7 @@ const MonthWrapper = styled.section`
 
   /* Today */
   .rbc-today {
-    background-color: ${(props) => props.theme.weekColor.week_1};
+    background-color: ${(props) => props.theme.weekColor.week_0};
   }
   /* day number */
   .rbc-button-link {
@@ -31,13 +40,27 @@ const MonthWrapper = styled.section`
   }
   /* Event */
   .rbc-event {
-    background-color: ${(props) => props.theme.weekColor.week_4};
+    background-color: ${(props) => props.theme.weekColor.week_3};
     border-radius: 0;
-    color: black;
+    color: ${colorSet.black};
+  }
+
+  /* Filter buttons */
+  .rbc-btn-group button:hover {
+    background-color: ${(props) => props.theme.pointColor};
+  }
+  .rbc-btn-group button:active {
+    background-color: ${(props) => props.theme.pointColor};
+  }
+
+  /* Toolbar heading */
+  .rbc-toolbar-label {
+    font-size: ${fontSize.large};
+    font-weight: ${fontWeight.small};
   }
 `;
 
-// Pop up - event detail card
+// Popup - event detail card
 const PopUpCard = styled.div`
   width: 100%;
   height: 100%;
@@ -59,13 +82,11 @@ const Icon = styled(FontAwesomeIcon)`
 
 // Event icon box
 const EventBox = styled.div`
-  width: 20px;
-  text-align: end;
-  width: 13%;
-  position: absolute;
-  transform: translate(0, -18px);
+  display: flex;
+  justify-content: end;
 
   img {
+    margin-left: 3px;
     width: 15px;
     height: 15px;
     border-radius: 50%;
@@ -78,13 +99,16 @@ const localizer = dayjsLocalizer(dayjs);
 
 function MyCalendar() {
   const [isClicked, setISClicked] = useState(false);
+  const [filterType, setFilterType] = useState("all");
   const [itemType, setItemType] = useState("");
   const [events, setEvents] = useState<IData[]>([]);
   const [clickEvent, setClickEvent] = useState<IData>();
   const data = useSelector((state: IState) => state.data);
 
   const navigation = useNavigate();
+  const theme = useTheme();
 
+  // Set Events - and filtering data
   useEffect(() => {
     const schedule = Object.values(data.schedule).flatMap((data) => data);
     const diary = Object.values(data.diary).flatMap((data) => data);
@@ -92,37 +116,52 @@ function MyCalendar() {
     const budgetBook = Object.values(data.budgetBook).flatMap((arr) => {
       const data = arr.reduce((acc, { amount }) => acc + amount!, 0);
       return {
-        id: "",
+        id: "budgetBook",
         date: "",
-        title: data + "원",
+        title: data.toLocaleString() + "원",
         time: arr[0].time,
         endDate: arr[0].time,
         type: data > 0 ? "positive" : "negative",
       };
     });
     const array = [...diary, ...schedule, ...budgetBook];
-    setEvents(array);
-  }, [isClicked]);
+
+    // Filter Button
+    if (filterType === "all") {
+      return setEvents(array);
+    } else if (filterType === "budgetBook") {
+      return setEvents(budgetBook);
+    } else if (filterType === "schedule") {
+      return setEvents(schedule);
+    } else if (filterType === "diary") {
+      return setEvents(diary);
+    }
+  }, [isClicked, filterType]);
 
   // Styled to type
   const eventPropGetter = (event: any) => {
-    let style = { backgroundColor: "", color: "black" };
+    let style = { backgroundColor: "", color: "black", fontSize: "" };
     if (event.type === "diary") {
-      style.backgroundColor = "transparent";
+      style.backgroundColor = theme.pointColor;
+      style.color = "white";
     } else if (event.type === "positive") {
       style.backgroundColor = "transparent";
-      style.color = "blue";
+      style.color = colorSet.blue;
+      style.fontSize = fontSize.small;
     } else if (event.type === "negative") {
       style.backgroundColor = "transparent";
-      style.color = "red";
+      style.color = colorSet.red;
+      style.fontSize = fontSize.small;
     }
-    return { style };
+    return { style }; //
   };
 
+  // Style - emoji
   const EventIcon = ({ event }: any) => {
     if (event.type === "diary") {
       return (
         <EventBox>
+          {event.title}
           <img src={`${imageUrl}${event.emoji}.svg`} />
         </EventBox>
       );
@@ -131,8 +170,50 @@ function MyCalendar() {
     }
   };
 
+  // Tool bar - header and buttons - prev, next and filter buttons
+  const MyToolbar = (props: ToolbarProps) => {
+    const onGoToToday = () => {
+      props.onNavigate("TODAY", new Date());
+    };
+
+    const onFilter = (type: string) => {
+      if (type === filterType) {
+        return setFilterType("all");
+      } else {
+        return setFilterType(type);
+      }
+    };
+
+    return (
+      <div className="rbc-toolbar">
+        <span className="rbc-btn-group">
+          <button type="button" onClick={() => props.onNavigate("PREV")}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
+          <button type="button" onClick={onGoToToday}>
+            Today
+          </button>
+          <button type="button" onClick={() => props.onNavigate("NEXT")}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </button>
+        </span>
+        <span className="rbc-toolbar-label">{props.label.slice(0, 2)}</span>
+        <span className="rbc-btn-group">
+          <button onClick={() => onFilter("schedule")}>할일</button>
+          <button onClick={() => onFilter("budgetBook")}>가계부</button>
+          <button onClick={() => onFilter("diary")}>일기</button>
+        </span>
+      </div>
+    );
+  };
+
   // Show clicked event
   const onDayclick = (event: IData) => {
+    // When click total amount
+    if (event.id === "budgetBook") {
+      const path = event.time!.slice(0, 10);
+      return navigation(`/${path}`);
+    }
     setISClicked(true);
     setClickEvent(event);
     setItemType(event.type!);
@@ -147,9 +228,9 @@ function MyCalendar() {
   const onClosePopUp = (e: React.MouseEvent<HTMLDivElement>) => {
     const targetTagName = (e.target as HTMLDivElement).nodeName;
 
-    // Click X icon or Buttons
+    // Click 'X' icon or Buttons
     if (targetTagName === "path" || "BUTTON") {
-      setISClicked(false);
+      return setISClicked(false);
     }
   };
 
@@ -158,14 +239,14 @@ function MyCalendar() {
       <Calendar
         events={events}
         localizer={localizer}
-        onSelectEvent={onDayclick}
+        onSelectEvent={onDayclick} //onClick day event
         onShowMore={onShowMoreEvents}
         views={[Views.MONTH]}
         startAccessor="time"
         endAccessor="endDate"
-        style={{ height: "750px" }}
-        eventPropGetter={eventPropGetter}
-        components={{ event: EventIcon }}
+        style={{ height: "750px", marginTop: "20px" }}
+        eventPropGetter={eventPropGetter} //style
+        components={{ event: EventIcon, toolbar: MyToolbar }} // custom
         messages={{ showMore: (total) => `+${total} 더보기` }}
       />
       {isClicked && (

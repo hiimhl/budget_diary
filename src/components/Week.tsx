@@ -264,7 +264,11 @@ function Week() {
           {list === today && <TodayIcon />}
         </TodayDate>
         <TodayContent isPositive={isPositive}>
-          {total === 0 ? "" : <span className="total">{total}원 </span>}
+          {total === 0 ? (
+            ""
+          ) : (
+            <span className="total">{total.toLocaleString()}원 </span>
+          )}
           {isSchedule}
           {isDiary}
         </TodayContent>

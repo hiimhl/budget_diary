@@ -153,7 +153,7 @@ function TodayCard() {
           <InfoBox>
             <span>
               <b>총 지출 : </b>
-              <div>{totalAmount}원</div>
+              <div>{totalAmount.toLocaleString()}원</div>
             </span>
             <span>
               <b>오늘의 기록 : </b>

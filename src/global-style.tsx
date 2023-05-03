@@ -18,7 +18,12 @@ button{
 body {
   font-family:${font.kor};
   background-color: ${(props) => props.theme.backgroundColor};
-  color:${(props) => props.theme.textColor}
+  color:${(props) => props.theme.textColor};
+  /* Prevnet Drag */
+  -webkit-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none
 }
 a {
   text-decoration:none;

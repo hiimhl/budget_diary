@@ -1,6 +1,6 @@
 // Weekly Calendar
 import dayjs, { Dayjs } from "dayjs";
-import React, { useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -206,75 +206,76 @@ function Week() {
   // Get Next and Previous weeks
   const onNextWeeks = () => {
     setWeekData((prev: Dayjs) => prev.add(7, "day"));
-    // setDayList(getWeekList(weekData));
     setDayList(getWeekList(weekData.add(7, "day"))); // 값을 바로 반영하기 위해 변경된 값을 전달
   };
-  const onPrevWeeks = () => {
+  const onPrevWeeks = useCallback(() => {
     setWeekData((prev: Dayjs) => prev.subtract(7, "day"));
     setDayList(getWeekList(weekData.subtract(7, "day")));
-  };
+  }, [weekData, dayList]);
 
   // Render the Week list
-  const printWeeklyList = dayList.map((list, index) => {
-    let total = 0;
+  const printWeeklyList = useMemo(() => {
+    return dayList.map((list, index) => {
+      let total = 0;
 
-    if (budgetData[list]) {
-      total = budgetData[list].reduce((prev, current) => {
-        return prev + current.amount!;
-      }, 0);
-    }
+      if (budgetData[list]) {
+        total = budgetData[list].reduce((prev, current) => {
+          return prev + current.amount!;
+        }, 0);
+      }
 
-    // Get data
-    const isToday = list === today ? "today" : "";
-    const isDiary = diaryData[list] ? (
-      <Note>
-        <FontAwesomeIcon icon={faCommentDots} />
-      </Note>
-    ) : (
-      ""
-    );
-
-    const isSchedule = //
-      scheduleData[list] ? (
-        <ul>
-          {scheduleData[list].map((data) => (
-            <li key={data.id}>
-              <FontAwesomeIcon icon={faSquareCheck} />
-              <span>{dayjs(data.time).format("H시")} - </span>
-              {data.title!.slice(0, 6)}
-            </li>
-          ))}
-        </ul>
+      // Get data
+      const isToday = list === today ? "today" : "";
+      const isDiary = diaryData[list] ? (
+        <Note>
+          <FontAwesomeIcon icon={faCommentDots} />
+        </Note>
       ) : (
         ""
       );
 
-    const day = getWeek(index);
-    const isPositive = Math.sign(total);
+      const isSchedule = //
+        scheduleData[list] ? (
+          <ul>
+            {scheduleData[list].map((data) => (
+              <li key={data.id}>
+                <FontAwesomeIcon icon={faSquareCheck} />
+                <span>{dayjs(data.time).format("H시")} - </span>
+                {data.title!.slice(0, 6)}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          ""
+        );
 
-    return (
-      <MyList
-        onClick={() => navigation(`/${list}`)}
-        key={`week_${index}`}
-        className={`week_${index} ${isToday}`}
-      >
-        <TodayDate>
-          <b>{day}</b>
-          <small>{list.slice(-2)}일</small>
-          {list === today && <TodayIcon />}
-        </TodayDate>
-        <TodayContent isPositive={isPositive}>
-          {total === 0 ? (
-            ""
-          ) : (
-            <span className="total">{total.toLocaleString()}원 </span>
-          )}
-          {isSchedule}
-          {isDiary}
-        </TodayContent>
-      </MyList>
-    );
-  });
+      const day = getWeek(index);
+      const isPositive = Math.sign(total);
+
+      return (
+        <MyList
+          onClick={() => navigation(`/${list}`)}
+          key={`week_${index}`}
+          className={`week_${index} ${isToday}`}
+        >
+          <TodayDate>
+            <b>{day}</b>
+            <small>{list.slice(-2)}일</small>
+            {list === today && <TodayIcon />}
+          </TodayDate>
+          <TodayContent isPositive={isPositive}>
+            {total === 0 ? (
+              ""
+            ) : (
+              <span className="total">{total.toLocaleString()}원 </span>
+            )}
+            {isSchedule}
+            {isDiary}
+          </TodayContent>
+        </MyList>
+      );
+    });
+  }, [dayList, budgetData, diaryData, scheduleData, today]);
 
   return (
     <WeekWrapper>
@@ -295,4 +296,4 @@ function Week() {
   );
 }
 
-export default Week;
+export default React.memo(Week);

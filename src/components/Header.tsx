@@ -4,7 +4,7 @@ import {
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -26,6 +26,7 @@ const Wrapper = styled.header`
   margin: auto;
   height: 11vh;
   font-family: ${font.eng};
+  margin-bottom: ${space.small};
 
   /* Tablet */
   @media only screen and (max-width: 768px) {
@@ -34,7 +35,6 @@ const Wrapper = styled.header`
 `;
 
 const Navbar = styled.nav`
-  border-bottom: 2px dashed ${(props) => props.theme.pointColor};
   display: flex;
   align-items: center;
   padding: ${space.basic} ${space.middle};
@@ -53,10 +53,25 @@ const Navbar = styled.nav`
 `;
 
 const Children = styled.div`
-  padding: ${space.basic} 10%;
   display: flex;
   justify-content: space-between;
   font-size: ${fontSize.large};
+  border-top: 1px ${(props) => props.theme.weekColor.week_3} solid;
+  border-bottom: 1px ${(props) => props.theme.weekColor.week_3} solid;
+
+  /* children - buttons and text */
+  span {
+    padding: ${space.button} 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  span:nth-child(2) {
+    justify-content: center;
+    border-left: 1px ${(props) => props.theme.weekColor.week_3} solid;
+    border-right: 1px ${(props) => props.theme.weekColor.week_3} solid;
+  }
 
   button {
     font-weight: ${fontWeight.title};
@@ -195,8 +210,10 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
     const { id } = e.currentTarget;
     dispatch({ type: SET_THEME, data: { theme: id } });
     setIsThemeClicked(false);
+    setToggleMenu(false);
   };
 
+  // Check if user login or out
   useEffect(() => {
     getAuthData.onAuthStateChanged((user) =>
       user ? setIsLoggin(true) : setIsLoggin(false)
@@ -240,7 +257,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
                   레인보우
                 </li>
                 <li id="VIVID" onClick={onTheme}>
-                  비비드
+                  퍼플
                 </li>
               </Theme>
             )}
@@ -256,4 +273,4 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   );
 }
 
-export default Header;
+export default React.memo(Header);

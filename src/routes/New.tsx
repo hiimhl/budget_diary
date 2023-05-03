@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import CreateAmount from "../components/CreateAmount";
 import CreateDiary from "../components/CreateDiary";
@@ -30,4 +30,4 @@ function New() {
   );
 }
 
-export default New;
+export default React.memo(New);

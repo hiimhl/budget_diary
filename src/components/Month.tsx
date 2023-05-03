@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import {
   Calendar,
@@ -18,7 +18,7 @@ import {
   faAngleRight,
   faSquareXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { colorSet, fontSize, fontWeight } from "../style-root";
+import { colorSet, fontSize, fontWeight, space } from "../style-root";
 import { useNavigate } from "react-router-dom";
 import { imageUrl } from "../util/image";
 
@@ -33,11 +33,7 @@ const MonthWrapper = styled.section`
   .rbc-today {
     background-color: ${(props) => props.theme.weekColor.week_0};
   }
-  /* day number */
-  .rbc-button-link {
-    float: left;
-    margin: 1px 2px;
-  }
+
   /* Event */
   .rbc-event {
     background-color: ${(props) => props.theme.weekColor.week_3};
@@ -45,17 +41,14 @@ const MonthWrapper = styled.section`
     color: ${colorSet.black};
   }
 
-  /* Filter buttons */
-  .rbc-btn-group button:hover {
-    background-color: ${(props) => props.theme.pointColor};
-  }
-  .rbc-btn-group button:active {
-    background-color: ${(props) => props.theme.pointColor};
+  /* Toolbar wrapper */
+  .rbc-toolbar {
+    margin-bottom: ${space.middle};
   }
 
   /* Toolbar heading */
   .rbc-toolbar-label {
-    font-size: ${fontSize.large};
+    font-size: ${fontSize.week};
     font-weight: ${fontWeight.small};
   }
 `;
@@ -83,12 +76,11 @@ const Icon = styled(FontAwesomeIcon)`
 // Event icon box
 const EventBox = styled.div`
   display: flex;
-  justify-content: end;
 
   img {
-    margin-left: 3px;
-    width: 15px;
-    height: 15px;
+    margin-right: 3px;
+    width: ${space.basic};
+    height: ${space.basic};
     border-radius: 50%;
     background-color: ${colorSet.emoji};
   }
@@ -156,13 +148,14 @@ function MyCalendar() {
     return { style }; //
   };
 
-  // Style - emoji
+  // Style diary events - add emoji
   const EventIcon = ({ event }: any) => {
     if (event.type === "diary") {
       return (
         <EventBox>
-          {event.title}
           <img src={`${imageUrl}${event.emoji}.svg`} />
+          {event.title.slice(0, 5)}
+          {event.title.length > 5 && "..."}
         </EventBox>
       );
     } else {
@@ -176,12 +169,23 @@ function MyCalendar() {
       props.onNavigate("TODAY", new Date());
     };
 
-    const onFilter = (type: string) => {
-      if (type === filterType) {
-        return setFilterType("all");
-      } else {
-        return setFilterType(type);
-      }
+    const calendarDate = props.label.slice(3) + "년 " + props.label.slice(0, 2);
+
+    const onFilter = (type: string) =>
+      setFilterType(filterType === type ? "all" : type);
+
+    // Style the Filter button when it is clicked  - inline style -
+    const styleFilterBtn = (type: string) => {
+      let style = {
+        backgroundColor: "",
+        boxShadow: "",
+      };
+      style.backgroundColor =
+        filterType === type ? theme.weekColor.week_0 : colorSet.white;
+      style.boxShadow =
+        filterType === type ? "inset 2px 2px 3px 0px rgba(0,0,0,0.08)" : "";
+
+      return style;
     };
 
     return (
@@ -197,11 +201,26 @@ function MyCalendar() {
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
         </span>
-        <span className="rbc-toolbar-label">{props.label.slice(0, 2)}</span>
+        <span className="rbc-toolbar-label">{calendarDate}</span>
         <span className="rbc-btn-group">
-          <button onClick={() => onFilter("schedule")}>할일</button>
-          <button onClick={() => onFilter("budgetBook")}>가계부</button>
-          <button onClick={() => onFilter("diary")}>일기</button>
+          <button
+            style={styleFilterBtn("schedule")}
+            onClick={() => onFilter("schedule")}
+          >
+            할일
+          </button>
+          <button
+            style={styleFilterBtn("budgetBook")}
+            onClick={() => onFilter("budgetBook")}
+          >
+            가계부
+          </button>
+          <button
+            style={styleFilterBtn("diary")}
+            onClick={() => onFilter("diary")}
+          >
+            일기
+          </button>
         </span>
       </div>
     );
@@ -244,7 +263,7 @@ function MyCalendar() {
         views={[Views.MONTH]}
         startAccessor="time"
         endAccessor="endDate"
-        style={{ height: "750px", marginTop: "20px" }}
+        style={{ height: "700px", marginTop: "20px" }}
         eventPropGetter={eventPropGetter} //style
         components={{ event: EventIcon, toolbar: MyToolbar }} // custom
         messages={{ showMore: (total) => `+${total} 더보기` }}

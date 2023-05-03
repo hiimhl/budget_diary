@@ -1,5 +1,5 @@
 // Render the detail data for the item
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -181,7 +181,6 @@ function DetailItem({ data, type, hiddenHeader, cardShadow }: IProps) {
 
   // Go to Edit page with Data
   const onEdit = (data: IData) => {
-    console.log(data);
     if (type === "budgetBook") {
       navigation("/new", { state: data });
     } else if (type === "schedule") {
@@ -201,11 +200,10 @@ function DetailItem({ data, type, hiddenHeader, cardShadow }: IProps) {
       } else if (type === "diary") {
         dispatch({ type: REMOVE_DIARY, data });
       }
-      navigation("/");
+      // navigation("/");
+      return navigation("/");
     }
-    navigation(-1);
   };
-  //팝업창이 닫히고 event내역이 업데이트돼야함.
 
   return (
     <>
@@ -259,4 +257,4 @@ function DetailItem({ data, type, hiddenHeader, cardShadow }: IProps) {
   );
 }
 
-export default DetailItem;
+export default React.memo(DetailItem);

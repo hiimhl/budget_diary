@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
@@ -45,10 +45,10 @@ function Home() {
     dispatch({ type: SET_VIEW, data: { todayView: true } });
   };
 
-  const onIsMonth = () => {
+  const onIsMonth = useCallback(() => {
     setIsToday(false);
     dispatch({ type: SET_VIEW, data: { todayView: false } });
-  };
+  }, [isToday]);
 
   return (
     <Wrapper>

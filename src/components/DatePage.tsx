@@ -1,5 +1,5 @@
 // Render All data list for the date
-import { useEffect } from "react";
+import React, { useCallback } from "react";
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,7 +27,8 @@ import {
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  padding-top: ${space.basic};
+  gap: ${space.middle};
 `;
 
 const Card = styled.section`
@@ -75,8 +76,8 @@ function DatePage() {
   const getPrevDay = dayjs(date).subtract(1, "day");
   const prevDay = getPrevDay.format("YYYY-MM-DD");
 
-  const onPrevDay = () => navigation(`/${prevDay}`);
-  const onNextDay = () => navigation(`/${nextDay}`);
+  const onPrevDay = useCallback(() => navigation(`/${prevDay}`), [prevDay]);
+  const onNextDay = useCallback(() => navigation(`/${nextDay}`), [nextDay]);
 
   const onAddData = (type: string) =>
     navigation(`/new/${type}`, { state: addPageDate });
@@ -135,4 +136,4 @@ function DatePage() {
     </Wrapper>
   );
 }
-export default DatePage;
+export default React.memo(DatePage);

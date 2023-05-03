@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { ADD_DIARY, EDIT_DIARY } from "../store/actions-type";
+import { ADD_DIARY, EDIT_DIARY, REMOVE_DIARY } from "../store/actions-type";
 import { setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -102,6 +102,15 @@ function CreateDiary() {
       memo: data.memo,
       endDate: data.date,
     };
+
+    if (editData && date != editData.date) {
+      return (
+        dispatch({ type: REMOVE_DIARY, data: editData }),
+        dispatch({ type: ADD_DIARY, data: obj }),
+        navigation("/")
+      );
+    }
+
     dispatch({ type: isEdit ? EDIT_DIARY : ADD_DIARY, data: obj });
     reset();
 

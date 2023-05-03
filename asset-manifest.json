@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/budget_diary/static/css/main.e06640d2.css",
+    "main.js": "/budget_diary/static/js/main.5fa32071.js",
+    "index.html": "/budget_diary/index.html",
+    "main.e06640d2.css.map": "/budget_diary/static/css/main.e06640d2.css.map",
+    "main.5fa32071.js.map": "/budget_diary/static/js/main.5fa32071.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e06640d2.css",
+    "static/js/main.5fa32071.js"
+  ]
+}

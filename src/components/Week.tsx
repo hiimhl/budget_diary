@@ -18,11 +18,7 @@ import { day, getWeek, getWeekList, today } from "../util/day";
 
 // Icon - Font Awesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAngleLeft,
-  faAngleRight,
-  faBookmark,
-} from "@fortawesome/free-solid-svg-icons";
+import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 import {
   faCommentDots,
   faSquareCheck,
@@ -36,12 +32,25 @@ const WeekWrapper = styled.div`
   width: 85%;
   margin: ${space.xlarge} auto;
   padding: ${space.middle};
+  z-index: 10;
 
   ul {
     width: 95%;
     margin: auto;
   }
-  z-index: 10;
+
+  @media (max-width: 768px) {
+    padding: ${space.basic} 0 0 0;
+
+    /* Week */
+    ul {
+      width: 100%;
+      /* day - date, content*/
+      li {
+        grid-template-columns: 30% 70%;
+      }
+    }
+  }
 `;
 
 const Box = styled.div`
@@ -169,6 +178,16 @@ const TodayContent = styled.div<{ isPositive: number }>`
       /* icon */
       svg {
         margin-right: ${space.micro};
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    /* day - cotents */
+    ul {
+      display: initial;
+      li {
+        padding-left: ${space.small};
       }
     }
   }

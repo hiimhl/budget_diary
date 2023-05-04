@@ -26,6 +26,10 @@ const Card = styled.section`
   margin-top: ${space.basic};
   border-radius: ${borderRadius.large};
   cursor: pointer;
+
+  @media (max-width: 768px) {
+    width: 85%;
+  }
 `;
 
 const DateBox = styled.div`

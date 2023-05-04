@@ -53,6 +53,13 @@ const Card = styled.section<{ cardShadow?: boolean; hiddenHeader?: boolean }>`
     padding: ${space.middle};
     position: relative;
   }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    ul {
+      padding: ${space.small};
+    }
+  }
 `;
 
 // Edit and Delete buttons
@@ -114,6 +121,11 @@ const List = styled.li`
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    grid-template-columns: 25% 75%;
   }
 `;
 

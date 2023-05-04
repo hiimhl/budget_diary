@@ -51,6 +51,17 @@ const MonthWrapper = styled.section`
     font-size: ${fontSize.week};
     font-weight: ${fontWeight.small};
   }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    .rbc-toolbar {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: ${space.small};
+      margin-bottom: ${space.middle};
+    }
+  }
 `;
 
 // Popup - event detail card

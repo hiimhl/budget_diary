@@ -68,7 +68,6 @@ export const FormCard = styled.section`
   }
 
   label {
-    /* font-size: ${fontSize.large}; */
     font-weight: ${fontWeight.small};
   }
 
@@ -123,6 +122,15 @@ export const FormCard = styled.section`
       background-color: ${colorSet.red};
       border: none;
       color: ${colorSet.white};
+    }
+  }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    /* list - input and label */
+    li {
+      padding: ${space.basic};
+      grid-template-columns: 34% 66%;
     }
   }
 `;

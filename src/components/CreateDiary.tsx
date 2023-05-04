@@ -46,6 +46,23 @@ const EmojiBox = styled.li`
       width: 40px;
     }
   }
+
+  @media (max-width: 768px) {
+    /* Emoji wrapper */
+    div {
+      gap: ${space.micro};
+    }
+    label {
+      width: 35px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      img {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  }
 `;
 
 // Interface

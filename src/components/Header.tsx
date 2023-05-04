@@ -4,7 +4,7 @@ import {
   faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { ReactNode, useCallback, useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -52,12 +52,13 @@ const Navbar = styled.nav`
   }
 `;
 
-const Children = styled.div`
+const Children = styled.div<{ removeBorder: boolean }>`
   display: flex;
   justify-content: space-between;
   font-size: ${fontSize.large};
   border-top: 1px ${(props) => props.theme.weekColor.week_3} solid;
-  border-bottom: 1px ${(props) => props.theme.weekColor.week_3} solid;
+  border-bottom: ${(props) =>
+    props.removeBorder ? `1px ${props.theme.weekColor.week_3} solid` : "none"};
 
   /* children - buttons and text */
   span {
@@ -69,8 +70,14 @@ const Children = styled.div`
 
   span:nth-child(2) {
     justify-content: center;
-    border-left: 1px ${(props) => props.theme.weekColor.week_3} solid;
-    border-right: 1px ${(props) => props.theme.weekColor.week_3} solid;
+    border-left: ${(props) =>
+      props.removeBorder
+        ? `1px ${props.theme.weekColor.week_3} solid`
+        : "none"};
+    border-right: ${(props) =>
+      props.removeBorder
+        ? `1px ${props.theme.weekColor.week_3} solid`
+        : "none"};
   }
 
   button {
@@ -108,6 +115,17 @@ const Menu = styled.aside`
   div:hover {
     text-decoration: underline;
   }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    div {
+      margin-left: ${space.small};
+
+      svg {
+        margin-left: ${space.small};
+      }
+    }
+  }
 `;
 
 const Theme = styled.ul`
@@ -118,9 +136,9 @@ const Theme = styled.ul`
     border-radius: ${borderRadius.small};
     width: 50%;
     cursor: pointer;
-    padding: 5px;
-    margin: 10px;
-    margin-left: 30px;
+    padding: ${space.micro};
+    margin: ${space.small};
+    margin-left: ${space.large};
     box-sizing: border-box;
     border: 1px solid ${colorSet.gray};
     transition: border 0.3s ease;
@@ -157,6 +175,13 @@ const Theme = styled.ul`
   #VIVID:hover {
     border-color: #deaaff;
   }
+
+  /* mobile */
+  @media (max-width: 768px) {
+    li {
+      margin-left: ${space.middle};
+    }
+  }
 `;
 
 /* Previous and Next button */
@@ -192,6 +217,8 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   const onGoHome = () => navigation("/");
   const onGoAddPage = () => navigation("/new");
   const onGoLoginPage = () => navigation("/login");
+
+  const propsIsExist = leftBtn || middleBtn || rightBtn ? true : false;
 
   const onLogout = () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
@@ -264,7 +291,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
           </Menu>
         )}
       </Navbar>
-      <Children>
+      <Children removeBorder={propsIsExist}>
         <span>{leftBtn}</span>
         <span>{middleBtn}</span>
         <span>{rightBtn}</span>

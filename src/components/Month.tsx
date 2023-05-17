@@ -53,13 +53,17 @@ const MonthWrapper = styled.section`
   }
 
   /* mobile */
-  @media (max-width: 768px) {
+  @media (max-width: 550px) {
     .rbc-toolbar {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       gap: ${space.small};
       margin-bottom: ${space.middle};
+    }
+    .rbc-btn-group {
+      button {
+        font-size: 12px;
+      }
     }
   }
 `;

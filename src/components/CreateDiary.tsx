@@ -52,14 +52,15 @@ const EmojiBox = styled.li`
     div {
       gap: ${space.micro};
     }
+    /* Emoji */
     label {
-      width: 35px;
+      width: 100%;
       justify-content: center;
       align-items: center;
       display: flex;
       img {
-        width: 30px;
-        height: 30px;
+        width: 97%;
+        height: 97%;
       }
     }
   }
@@ -108,7 +109,6 @@ function CreateDiary() {
   // Send data to the Store
   const onSubmit = (data: IForm) => {
     const date = data.date.slice(0, 10);
-
     const obj = {
       title: data.title,
       date,

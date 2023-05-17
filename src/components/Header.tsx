@@ -184,6 +184,12 @@ const Theme = styled.ul`
   }
 `;
 
+const UserName = styled.div`
+  cursor: default;
+  text-decoration: none;
+  color: ${(props) => props.theme.pointColor};
+`;
+
 /* Previous and Next button */
 export const LeftRightBtn = styled.button`
   color: ${colorSet.gray};
@@ -218,7 +224,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   const onGoAddPage = () => navigation("/new");
   const onGoLoginPage = () => navigation("/login");
 
-  const propsIsExist = leftBtn || middleBtn || rightBtn ? true : false;
+  const propIsExist = leftBtn || middleBtn || rightBtn ? true : false;
 
   const onLogout = () => {
     if (window.confirm("로그아웃하시겠습니까?")) {
@@ -250,12 +256,15 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
   return (
     <Wrapper>
       <Navbar>
-        <span onClick={onGoHome}>logo</span>
+        <span onClick={onGoHome}>Logo</span>
         <button onClick={onMenuToggle}>
           <FontAwesomeIcon icon={faBars} />
         </button>
         {toggleMenu && (
           <Menu>
+            {userInfo.uid && (
+              <UserName>{userInfo.displayName || "user"}'s Book</UserName>
+            )}
             <div onClick={onGoHome}>홈</div>
             {isLoggin ? (
               <div onClick={onLogout}>로그아웃</div>
@@ -291,7 +300,7 @@ function Header({ leftBtn, middleBtn, rightBtn, isLogout }: IProps) {
           </Menu>
         )}
       </Navbar>
-      <Children removeBorder={propsIsExist}>
+      <Children removeBorder={propIsExist}>
         <span>{leftBtn}</span>
         <span>{middleBtn}</span>
         <span>{rightBtn}</span>

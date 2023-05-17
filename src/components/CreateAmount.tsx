@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
-import { ADD_BUDGET, EDIT_BUDGET } from "../store/actions-type";
-import { day, setDefaultDate } from "../util/day";
+import { ADD_BUDGET, EDIT_BUDGET, REMOVE_BUDGET } from "../store/actions-type";
+import { setDefaultDate } from "../util/day";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -208,8 +208,15 @@ function CreateAmount() {
   useEffect(() => {
     if (editData) {
       setIsEdit(true);
+      let amount = editData.amount;
+      // if amount is negative
+      if (editData.amount < 0) {
+        amount = Math.abs(editData.amount);
+      } else {
+        setIsPositive(true);
+      }
       setValue("date", editData.time);
-      setValue("amount", editData.amount);
+      setValue("amount", amount);
       setValue("title", editData.title);
       setValue("category", editData.category);
       setValue("pay", editData.pay);
@@ -230,13 +237,21 @@ function CreateAmount() {
       amount,
       date,
       time: data.date,
-      type: "budgetBook",
+      type: isPositive ? "positive" : "negative",
       id: isEdit ? editData.id : id,
       category: data.category,
       pay: data.pay,
       memo: data.memo,
       endDate: data.date,
     };
+
+    // If Edit the DATE
+    if (isEdit && editData.date != date) {
+      dispatch({ type: ADD_BUDGET, data: obj });
+      dispatch({ type: REMOVE_BUDGET, data: editData });
+      navigation(`/${date}`);
+      return;
+    }
 
     dispatch({ type: isEdit ? EDIT_BUDGET : ADD_BUDGET, data: obj });
     reset();
@@ -247,7 +262,7 @@ function CreateAmount() {
   };
 
   // Set positive or negative
-  const onIsPositive = () => setIsPositive((prev: boolean) => !prev);
+  const onIsPositive = () => setIsPositive((prev) => !prev);
 
   const onCancel = () => {
     if (window.confirm("취소하시겠습니까?")) {

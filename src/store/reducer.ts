@@ -122,16 +122,21 @@ export function reducer(
     // Remove data
     case REMOVE_BUDGET: {
       const { date, id } = action.data;
+      const updatedBudgetBook = {
+        ...state.data.budgetBook,
+        [date]: state.data.budgetBook[date].filter((list) => list.id !== id),
+      };
+
+      // delete the empty array
+      if (updatedBudgetBook[date].length === 0) {
+        delete updatedBudgetBook[date];
+      }
 
       return {
         ...state,
         data: {
           ...state.data,
-          budgetBook: {
-            [date]: state.data.budgetBook[date].filter(
-              (list) => list.id !== id
-            ),
-          },
+          budgetBook: updatedBudgetBook,
         },
       };
     }
@@ -157,6 +162,7 @@ export function reducer(
         data: {
           ...state.data,
           schedule: {
+            ...state.data.schedule,
             [date]: state.data.schedule[date].filter((list) => list.id !== id),
           },
         },

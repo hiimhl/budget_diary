@@ -31,7 +31,7 @@ function CreateSchedule() {
   const dispatch = useDispatch();
   const [isEdit, setIsEdit] = useState(false);
 
-  const id = uuidv4();
+  const newId = uuidv4();
   const navigation = useNavigate();
 
   // DefaultValue of Date input - fiexd at 9AM today
@@ -70,18 +70,16 @@ function CreateSchedule() {
         time: data.date,
         type: "schedule",
         endDate: data.endDate,
-        id: isEdit ? editData.id : id,
+        id: isEdit ? editData.id : newId,
         memo: data.memo,
       };
       // 수정할 데이터의 날짜를 모두 수정한다면
       if (isEdit && editData.date != date) {
-        const editObj = {
-          id: editData.id,
-          date: editData.date,
-        };
-        dispatch({ type: REMOVE_SCHEDULE, data: editObj });
+        dispatch({ type: REMOVE_SCHEDULE, data: editData });
         dispatch({ type: ADD_SCHEDULE, data: obj });
-        return navigation(`/${date}`);
+        setIsEdit(false);
+        navigation(`/${date}`);
+        return;
       }
       dispatch({ type: isEdit ? EDIT_SCHEDULE : ADD_SCHEDULE, data: obj });
       reset();

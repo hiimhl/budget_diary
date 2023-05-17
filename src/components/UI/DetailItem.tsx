@@ -118,6 +118,7 @@ const List = styled.li`
     line-height: 1.3;
     overflow-y: scroll;
     -ms-overflow-style: none;
+    white-space: pre-line; // 줄 바꿈
     &::-webkit-scrollbar {
       display: none;
     }

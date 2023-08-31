@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/budget_diary/static/css/main.e06640d2.css",
-    "main.js": "/budget_diary/static/js/main.180f61eb.js",
+    "main.js": "/budget_diary/static/js/main.fbad1bce.js",
     "index.html": "/budget_diary/index.html",
     "main.e06640d2.css.map": "/budget_diary/static/css/main.e06640d2.css.map",
-    "main.180f61eb.js.map": "/budget_diary/static/js/main.180f61eb.js.map"
+    "main.fbad1bce.js.map": "/budget_diary/static/js/main.fbad1bce.js.map"
   },
   "entrypoints": [
     "static/css/main.e06640d2.css",
-    "static/js/main.180f61eb.js"
+    "static/js/main.fbad1bce.js"
   ]
 }
